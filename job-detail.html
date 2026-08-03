@@ -504,7 +504,7 @@
         // Formatted Share Text Constructor (Guarantees job position is included)
         function getShareFormattedText() {
             if (!currentJob) return window.location.href;
-            return `📢 ประกาศรับสมัครงานบน WebHub.asia\n📌 ตำแหน่ง: ${currentJob.title || ''}\n🏢 บริษัท: ${currentJob.company || ''}\n💰 เงินเดือน: ${currentJob.salary || 'ตามตกลง'}\n📍 สถานที่: ${currentJob.location || 'ไม่ระบุ'}\n\n👉 ดูรายละเอียดและติดต่อสมัครได้ที่:\n${window.location.href}`;
+            return `📢 ประกาศรับสมัครงาน\n📌 ตำแหน่ง: ${currentJob.title || ''}\n🏢 บริษัท: ${currentJob.company || ''}\n💰 เงินเดือน: ${currentJob.salary || 'ตามตกลง'}\n📍 สถานที่: ${currentJob.location || 'ไม่ระบุ'}\n\n👉 ดูรายละเอียดและติดต่อสมัครได้ที่:\n${window.location.href}`;
         }
 
         // Native Share or Fallback
