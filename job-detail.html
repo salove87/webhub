@@ -10,7 +10,7 @@
     <meta name="robots" content="index, follow, max-image-preview:large">
     <meta name="author" content="WebHub.asia">
 
-    <!-- Open Graph / Facebook -->
+    <!-- Open Graph / Facebook / LINE Share -->
     <meta property="og:type" content="article">
     <meta property="og:title" id="ogTitle" content="รายละเอียดงาน - WebHub.asia Jobs">
     <meta property="og:description" id="ogDescription" content="รายละเอียดตำแหน่งงานและช่องทางการสมัครงานบน WebHub.asia">
@@ -176,17 +176,17 @@
                                 <i class="fa-solid fa-share-nodes text-brand-600"></i>
                                 <span>แชร์งานนี้</span>
                             </button>
-                            <button onclick="shareLine()" class="px-3 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-1.5 shadow-2xs active:scale-95" title="แชร์ลง LINE">
+                            <button onclick="shareLine()" class="px-3.5 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-1.5 shadow-2xs active:scale-95" title="แชร์ลง LINE พร้อมระบุชื่อตำแหน่งงาน">
                                 <i class="fa-brands fa-line text-sm"></i>
-                                <span>LINE</span>
+                                <span>ส่งใน LINE</span>
                             </button>
-                            <button onclick="shareFacebook()" class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-1.5 shadow-2xs active:scale-95" title="แชร์ลง Facebook">
+                            <button onclick="shareFacebook()" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-1.5 shadow-2xs active:scale-95" title="แชร์ลง Facebook">
                                 <i class="fa-brands fa-facebook text-sm"></i>
                                 <span>FB</span>
                             </button>
-                            <button onclick="copyShareText()" class="px-3 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-1.5 shadow-2xs active:scale-95" title="คัดลอกรายละเอียดและลิงก์">
+                            <button onclick="copyShareText()" class="px-3.5 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-1.5 shadow-2xs active:scale-95" title="คัดลอกรายละเอียดตำแหน่งงานและลิงก์">
                                 <i class="fa-solid fa-copy"></i>
-                                <span class="hidden sm:inline">ก๊อปปี้</span>
+                                <span>ก๊อปปี้งาน</span>
                             </button>
                         </div>
 
@@ -354,12 +354,26 @@
             }
         }
 
-        // Render full page job details
+        // Render full page job details & dynamically update page titles
         function renderJobDetails(job) {
-            // Document title & SEO meta
+            // Document title & SEO meta dynamically
             const titleText = `${job.title} - ${job.company} | WebHub.asia Jobs`;
+            const descText = `รับสมัครงานตำแหน่ง ${job.title} โดยบริษัท ${job.company} อัตราเงินเดือน ${job.salary || 'ตามตกลง'} สถานที่ทำงาน ${job.location || 'ไม่ระบุ'}`;
+            
             document.title = titleText;
-            document.getElementById('pageTitle').textContent = titleText;
+            
+            const pageTitleElem = document.getElementById('pageTitle');
+            if (pageTitleElem) pageTitleElem.textContent = titleText;
+            
+            const metaDesc = document.getElementById('metaDescription');
+            if (metaDesc) metaDesc.setAttribute('content', descText);
+            
+            const ogTitle = document.getElementById('ogTitle');
+            if (ogTitle) ogTitle.setAttribute('content', titleText);
+            
+            const ogDesc = document.getElementById('ogDescription');
+            if (ogDesc) ogDesc.setAttribute('content', descText);
+
             document.getElementById('breadcrumbTitle').textContent = job.title;
             document.getElementById('breadcrumbCategory').textContent = getCategoryName(job.category);
 
@@ -487,10 +501,10 @@
             }
         }
 
-        // Formatted Share Text Constructor
+        // Formatted Share Text Constructor (Guarantees job position is included)
         function getShareFormattedText() {
             if (!currentJob) return window.location.href;
-            return `📢 ประกาศรับสมัครงานบน WebHub.asia\n📌 ตำแหน่ง: ${currentJob.title || ''}\n🏢 บริษัท: ${currentJob.company || ''}\n💰 เงินเดือน: ${currentJob.salary || 'ตามตกลง'}\n📍 สถานที่: ${currentJob.location || 'ไม่ระบุ'}\n\n👉 ดูรายละเอียดงานและติดต่อสมัครได้ที่:\n${window.location.href}`;
+            return `📢 ประกาศรับสมัครงานบน WebHub.asia\n📌 ตำแหน่ง: ${currentJob.title || ''}\n🏢 บริษัท: ${currentJob.company || ''}\n💰 เงินเดือน: ${currentJob.salary || 'ตามตกลง'}\n📍 สถานที่: ${currentJob.location || 'ไม่ระบุ'}\n\n👉 ดูรายละเอียดและติดต่อสมัครได้ที่:\n${window.location.href}`;
         }
 
         // Native Share or Fallback
@@ -512,11 +526,11 @@
             }
         }
 
-        // Share to LINE
+        // Direct Share to LINE App with full job text (Works on Mobile & Desktop)
         function shareLine() {
-            const url = encodeURIComponent(window.location.href);
-            const lineShareUrl = `https://social-plugins.line.me/lineit/share?url=${url}`;
-            window.open(lineShareUrl, '_blank', 'width=600,height=500');
+            const formattedText = getShareFormattedText();
+            const lineShareUrl = `https://line.me/R/msg/text/?${encodeURIComponent(formattedText)}`;
+            window.open(lineShareUrl, '_blank');
         }
 
         // Share to Facebook
@@ -533,7 +547,7 @@
             // Clipboard API or execCommand fallback
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(textToCopy).then(() => {
-                    showToast('คัดลอกข้อความแชร์สำเร็จ!', 'รายละเอียดงานและลิงก์ถูกคัดลอกลง Clipboard แล้ว');
+                    showToast('คัดลอกข้อความงานสำเร็จ!', `ตำแหน่ง: "${currentJob?.title || ''}" พร้อมลิงก์ถูกคัดลอกแล้ว`);
                 }).catch(() => {
                     fallbackCopy(textToCopy);
                 });
@@ -549,7 +563,7 @@
             tempInput.select();
             document.execCommand("copy");
             document.body.removeChild(tempInput);
-            showToast('คัดลอกข้อความแชร์สำเร็จ!', 'รายละเอียดงานและลิงก์ถูกคัดลอกเรียบร้อยแล้ว');
+            showToast('คัดลอกข้อความงานสำเร็จ!', `ตำแหน่ง: "${currentJob?.title || ''}" พร้อมลิงก์ถูกคัดลอกแล้ว`);
         }
 
         // Show Toast Notification
@@ -564,7 +578,7 @@
             setTimeout(() => {
                 toast.classList.remove('opacity-100', 'translate-y-0');
                 toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-[-100px]');
-            }, 3000);
+            }, 3500);
         }
 
         // Fetch other jobs from the same company name
