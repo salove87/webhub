@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">รายละเอียดงาน - WebHub.asia Jobs</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" id="metaDescription" content="รายละเอียดตำแหน่งงานและช่องทางการสมัครงานบน WebHub.asia">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <meta name="author" content="WebHub.asia">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" id="ogTitle" content="รายละเอียดงาน - WebHub.asia Jobs">
+    <meta property="og:description" id="ogDescription" content="รายละเอียดตำแหน่งงานและช่องทางการสมัครงานบน WebHub.asia">
+    <meta property="og:site_name" content="WebHub.asia">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Kanit Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Firebase JS SDK (v10 Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#2563eb',
+                            600: '#1d4ed8',
+                            700: '#1e40af',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Kanit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Kanit', sans-serif; }
+        .glass-header {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased">
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 glass-header border-b border-slate-200 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo & Back Link -->
+                <div class="flex items-center gap-4">
+                    <a href="jobs.html" class="inline-flex items-center gap-2 text-slate-600 hover:text-brand-600 font-medium text-sm transition-colors py-1 px-3 rounded-xl bg-slate-100 hover:bg-brand-50 border border-slate-200">
+                        <i class="fa-solid fa-arrow-left text-xs"></i>
+                        <span>กลับสู่ศูนย์รวมหางาน</span>
+                    </a>
+                    
+                    <div class="h-5 w-px bg-slate-300 hidden sm:block"></div>
+
+                    <a href="index.html" class="hidden sm:flex items-center gap-2 group" title="กลับไปหน้าหลัก WebHub.asia">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center text-white font-bold text-sm shadow-md">
+                            W
+                        </div>
+                        <span class="text-base font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-600 to-indigo-600">WebHub<span class="text-xs text-slate-400">.asia</span></span>
+                    </a>
+                </div>
+
+                <!-- Action Button -->
+                <a href="jobs.html?action=post" class="bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-medium shadow-md transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-circle-plus"></i>
+                    <span>ลงประกาศงานฟรี</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Full Page Container -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+        
+        <!-- Loading Spinner State -->
+        <div id="loadingState" class="py-20 text-center">
+            <div class="w-12 h-12 border-4 border-brand-200 border-t-brand-600 rounded-full animate-spin mx-auto mb-4"></div>
+            <p class="text-slate-500 font-medium text-sm">กำลังโหลดรายละเอียดตำแหน่งงาน...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="hidden py-16 text-center bg-white rounded-2xl border border-slate-200 shadow-sm my-6 p-6">
+            <div class="w-16 h-16 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i class="fa-solid fa-circle-exclamation"></i>
+            </div>
+            <h2 class="text-xl font-bold text-slate-900 mb-2">ไม่พบข้อมูลตำแหน่งงานที่ต้องการ</h2>
+            <p class="text-slate-500 text-sm mb-6 max-w-md mx-auto">ตำแหน่งงานนี้อาจถูกลบไปแล้ว หรือลิงก์ที่คุณเข้าชมไม่ถูกต้อง</p>
+            <a href="jobs.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-medium text-sm rounded-xl shadow-md transition-colors">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>ดูตำแหน่งงานว่างทั้งหมด</span>
+            </a>
+        </div>
+
+        <!-- Main Job Detail Card (Full Screen Page) -->
+        <article id="jobDetailCard" class="hidden space-y-6">
+            
+            <!-- Breadcrumb Navigation -->
+            <nav class="flex items-center gap-2 text-xs text-slate-500 mb-2 overflow-x-auto whitespace-nowrap">
+                <a href="index.html" class="hover:text-brand-600">หน้าแรก</a>
+                <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+                <a href="jobs.html" class="hover:text-brand-600">ศูนย์รวมหางาน</a>
+                <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+                <span id="breadcrumbCategory" class="text-slate-800 font-medium">หมวดหมู่งาน</span>
+                <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+                <span id="breadcrumbTitle" class="text-slate-400 truncate max-w-[200px]">รายละเอียดงาน</span>
+            </nav>
+
+            <!-- Header Hero Card -->
+            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-md">
+                <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-6">
+                    <div class="flex items-start gap-4">
+                        <div id="companyLogo" class="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-500 to-indigo-600 text-white font-bold text-2xl flex items-center justify-center shrink-0 shadow-md">
+                            C
+                        </div>
+                        <div>
+                            <div class="flex flex-wrap items-center gap-2 mb-2">
+                                <span id="categoryBadge" class="px-3 py-1 rounded-lg text-xs font-semibold bg-brand-100 text-brand-700">
+                                    Category
+                                </span>
+                                <span id="workTypeBadge" class="px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700">
+                                    Full-Time
+                                </span>
+                                <span id="postDateBadge" class="text-xs text-slate-400 ml-1">
+                                    <i class="fa-regular fa-clock mr-1"></i> เมื่อสักครู่
+                                </span>
+                            </div>
+                            <h1 id="jobTitle" class="text-2xl sm:text-3xl font-bold text-slate-900 leading-tight mb-2">
+                                Job Title
+                            </h1>
+                            <p id="companyName" class="text-base font-semibold text-slate-600 flex items-center gap-2">
+                                <i class="fa-solid fa-building text-slate-400"></i>
+                                <span>Company Name</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Main Apply Button -->
+                    <div class="shrink-0 flex flex-col sm:items-end gap-2">
+                        <a id="mainApplyBtn" href="#" target="_blank" class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all text-center flex items-center justify-center gap-2 transform active:scale-95">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>ติดต่อสมัครงานตำแหน่งนี้</span>
+                        </a>
+                        <span class="text-[11px] text-slate-400 text-center sm:text-right">สมัครตรงกับผู้ว่าจ้างโดยตรง</span>
+                    </div>
+                </div>
+
+                <!-- Key Attributes Bar -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 pt-6 border-t border-slate-100">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100/80">
+                        <span class="text-xs text-slate-400 block mb-1">อัตราเงินเดือน / ค่าตอบแทน</span>
+                        <div id="jobSalary" class="text-lg font-bold text-emerald-600 flex items-center gap-2">
+                            <i class="fa-solid fa-money-bill-wave"></i>
+                            <span>30,000 บาท</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100/80">
+                        <span class="text-xs text-slate-400 block mb-1">สถานที่ทำงาน</span>
+                        <div id="jobLocation" class="text-sm font-semibold text-slate-800 truncate mb-1">
+                            กรุงเทพมหานคร
+                        </div>
+                        <div id="mapBtnContainer">
+                            <!-- Google Maps Dynamic Link -->
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100/80">
+                        <span class="text-xs text-slate-400 block mb-1">รูปแบบสัญญาจ้าง</span>
+                        <div id="jobType" class="text-sm font-semibold text-slate-800">
+                            งานประจำ (Full-Time)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Description Section -->
+            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-md space-y-6">
+                <div>
+                    <h2 class="text-base font-bold text-slate-900 uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-file-lines text-brand-600"></i>
+                        <span>รายละเอียดงาน & หน้าที่ความรับผิดชอบ</span>
+                    </h2>
+                    <div id="jobDescription" class="whitespace-pre-line leading-relaxed text-slate-700 text-sm sm:text-base bg-slate-50/50 p-5 rounded-xl border border-slate-100">
+                        รายละเอียดตำแหน่งงาน...
+                    </div>
+                </div>
+
+                <!-- Direct Contact Channels -->
+                <div class="bg-brand-50/60 border border-brand-100 p-5 rounded-2xl">
+                    <h3 class="text-base font-bold text-brand-900 mb-1 flex items-center gap-2">
+                        <i class="fa-solid fa-address-card text-brand-600"></i>
+                        <span>ช่องทางการสมัคร / ติดต่อฝ่ายบุคคลผู้ว่าจ้าง</span>
+                    </h3>
+                    <p class="text-xs text-slate-600 mb-4">โปรดเลือกช่องทางติดต่อสะดวกด้านล่างนี้เพื่อส่งข้อมูลสมัครงานโดยตรง:</p>
+                    
+                    <div id="contactChannels" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Dynamic Contact Cards -->
+                    </div>
+
+                    <!-- Safety Warning Badge -->
+                    <div class="mt-4 pt-3 border-t border-brand-200/60 flex items-start gap-2.5 text-xs text-amber-800 bg-amber-50 p-3 rounded-xl border border-amber-200/80">
+                        <i class="fa-solid fa-triangle-exclamation text-amber-600 text-base shrink-0 mt-0.5"></i>
+                        <span><strong>ข้อควรระวังเพื่อความปลอดภัย:</strong> WebHub.asia ดำเนินการในฐานะสื่อกลางเท่านั้น <u>การสมัครงานที่ถูกต้องจะไม่มีการเรียกเก็บเงินค่าสมัคร ค่าอุปกรณ์ หรือค่าอบรมล่วงหน้าใดๆ ทั้งสิ้น</u> หากพบเบาะแสสุ่มเสี่ยง โปรดหลีกเลี่ยง</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other positions from the same company -->
+            <div id="companyJobsSection" class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-md hidden">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-building text-brand-600"></i>
+                        <span>ตำแหน่งงานอื่น ๆ จาก <span id="otherCompanyName" class="text-brand-600">บริษัทนี้</span></span>
+                    </h3>
+                    <span id="otherCompanyCount" class="text-xs bg-brand-100 text-brand-700 font-semibold px-2.5 py-1 rounded-full">
+                        0 ตำแหน่ง
+                    </span>
+                </div>
+                
+                <div id="companyJobsList" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <!-- Dynamic rendering of other jobs -->
+                </div>
+            </div>
+
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 text-sm mt-auto">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-md bg-brand-600 flex items-center justify-center text-white text-xs font-bold">W</div>
+                <span class="font-semibold text-white">WebHub.asia Job Directory</span>
+            </div>
+            <p class="text-xs text-slate-500">
+                &copy; 2026 WebHub.asia — ศูนย์รวมประกาศหางาน และฝากประกาศงานฟรีสำหรับคนไทย
+            </p>
+            <div class="flex gap-4 text-xs">
+                <a href="index.html" class="hover:text-white transition-colors">หน้าแรก</a>
+                <a href="jobs.html" class="hover:text-white transition-colors">ศูนย์รวมหางาน</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // User's Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDZSY0jxEGzTG0rualNAgH_Ly45Ve_b3SY",
+            authDomain: "jobhub-a0de5.firebaseapp.com",
+            projectId: "jobhub-a0de5",
+            storageBucket: "jobhub-a0de5.firebasestorage.app",
+            messagingSenderId: "390768908775",
+            appId: "1:390768908775:web:1bd01cba98df640e228542",
+            measurementId: "G-2W4VFTTKJB"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Parse query parameter ?id=xxx
+        function getJobIdFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id');
+        }
+
+        // Fetch Job Details
+        async function loadJobDetail() {
+            const jobId = getJobIdFromUrl();
+            const loadingState = document.getElementById('loadingState');
+            const errorState = document.getElementById('errorState');
+            const jobDetailCard = document.getElementById('jobDetailCard');
+
+            if (!jobId) {
+                loadingState.classList.add('hidden');
+                errorState.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                const doc = await db.collection("jobs").doc(jobId).get();
+                if (!doc.exists) {
+                    loadingState.classList.add('hidden');
+                    errorState.classList.remove('hidden');
+                    return;
+                }
+
+                const job = doc.data();
+                job.id = doc.id;
+
+                renderJobDetails(job);
+                fetchOtherCompanyJobs(job.company, job.id);
+
+                loadingState.classList.add('hidden');
+                jobDetailCard.classList.remove('hidden');
+
+            } catch (err) {
+                console.error("Error fetching job details:", err);
+                loadingState.classList.add('hidden');
+                errorState.classList.remove('hidden');
+            }
+        }
+
+        // Render full page job details
+        function renderJobDetails(job) {
+            // Document title & SEO meta
+            const titleText = `${job.title} - ${job.company} | WebHub.asia Jobs`;
+            document.title = titleText;
+            document.getElementById('pageTitle').textContent = titleText;
+            document.getElementById('breadcrumbTitle').textContent = job.title;
+            document.getElementById('breadcrumbCategory').textContent = getCategoryName(job.category);
+
+            // Job Header
+            document.getElementById('jobTitle').textContent = job.title;
+            document.getElementById('companyName').querySelector('span').textContent = job.company;
+            document.getElementById('companyLogo').textContent = (job.company || 'C').charAt(0).toUpperCase();
+            document.getElementById('categoryBadge').textContent = getCategoryName(job.category);
+            document.getElementById('categoryBadge').className = `px-3 py-1 rounded-lg text-xs font-semibold ${getCategoryBadgeColor(job.category)}`;
+            document.getElementById('workTypeBadge').textContent = job.type || 'Full-Time';
+
+            if (job.createdAt && job.createdAt.toDate) {
+                const d = job.createdAt.toDate();
+                document.getElementById('postDateBadge').innerHTML = `<i class="fa-regular fa-clock mr-1"></i> ${d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' })}`;
+            }
+
+            // Stats
+            document.getElementById('jobSalary').querySelector('span').textContent = job.salary || 'ตามตกลง';
+            document.getElementById('jobLocation').textContent = job.location || 'ไม่ระบุสถานที่';
+            document.getElementById('jobType').textContent = job.type || 'Full-Time';
+
+            // Google Maps
+            const mapContainer = document.getElementById('mapBtnContainer');
+            const targetMapUrl = job.mapUrl || (job.location ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(job.company + ' ' + job.location)}` : null);
+            if (targetMapUrl) {
+                mapContainer.innerHTML = `
+                    <a href="${escapeHtml(targetMapUrl)}" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-brand-600 hover:text-brand-700 font-semibold hover:underline">
+                        <i class="fa-solid fa-map-location-dot text-rose-500"></i>
+                        <span>เปิดแผนที่บน Google Maps</span>
+                    </a>
+                `;
+            } else {
+                mapContainer.innerHTML = '';
+            }
+
+            // Description
+            document.getElementById('jobDescription').textContent = job.description || 'ไม่มีรายละเอียดเพิ่มเติม';
+
+            // Contact Channels
+            const contactContainer = document.getElementById('contactChannels');
+            let contactHtml = '';
+
+            if (job.phone) {
+                contactHtml += `
+                    <a href="tel:${escapeHtml(job.phone)}" class="p-3 bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 rounded-xl transition-all flex items-center gap-3 group shadow-2xs">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 font-bold text-lg">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <div class="overflow-hidden">
+                            <span class="text-xs text-slate-400 block">โทรศัพท์สอบถาม / สมัคร</span>
+                            <span class="font-bold text-slate-800 text-sm truncate block group-hover:text-emerald-700">${escapeHtml(job.phone)}</span>
+                        </div>
+                    </a>
+                `;
+            }
+
+            if (job.email) {
+                contactHtml += `
+                    <a href="mailto:${escapeHtml(job.email)}" class="p-3 bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 rounded-xl transition-all flex items-center gap-3 group shadow-2xs">
+                        <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 font-bold text-lg">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+                        <div class="overflow-hidden">
+                            <span class="text-xs text-slate-400 block">ส่งเรซูเม่ทางอีเมล</span>
+                            <span class="font-bold text-slate-800 text-sm truncate block group-hover:text-blue-700">${escapeHtml(job.email)}</span>
+                        </div>
+                    </a>
+                `;
+            }
+
+            if (job.line) {
+                const lineSearchUrl = job.line.startsWith('http') ? job.line : `https://line.me/ti/p/~${job.line.replace('@', '')}`;
+                contactHtml += `
+                    <a href="${escapeHtml(lineSearchUrl)}" target="_blank" class="p-3 bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 rounded-xl transition-all flex items-center gap-3 group shadow-2xs">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0 font-bold text-lg">
+                            <i class="fa-brands fa-line text-xl"></i>
+                        </div>
+                        <div class="overflow-hidden">
+                            <span class="text-xs text-slate-400 block">ติดต่อผ่าน LINE</span>
+                            <span class="font-bold text-slate-800 text-sm truncate block group-hover:text-emerald-700">${escapeHtml(job.line)}</span>
+                        </div>
+                    </a>
+                `;
+            }
+
+            if (job.website) {
+                contactHtml += `
+                    <a href="${escapeHtml(job.website)}" target="_blank" class="p-3 bg-white hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 rounded-xl transition-all flex items-center gap-3 group shadow-2xs">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0 font-bold text-lg">
+                            <i class="fa-solid fa-globe"></i>
+                        </div>
+                        <div class="overflow-hidden">
+                            <span class="text-xs text-slate-400 block">เว็บไซต์ / ฟอร์มสมัครงาน</span>
+                            <span class="font-bold text-slate-800 text-sm truncate block group-hover:text-indigo-700">${escapeHtml(job.website)}</span>
+                        </div>
+                    </a>
+                `;
+            }
+
+            if (!contactHtml && job.contact) {
+                contactHtml = `
+                    <div class="sm:col-span-2 font-medium text-brand-700 bg-white p-4 rounded-xl border border-brand-200 break-all select-all text-sm">
+                        <i class="fa-solid fa-circle-info text-brand-500 mr-2"></i>
+                        <span>${escapeHtml(job.contact)}</span>
+                    </div>
+                `;
+            }
+
+            contactContainer.innerHTML = contactHtml;
+
+            // Main Apply button behavior
+            const applyBtn = document.getElementById('mainApplyBtn');
+            if (job.email) {
+                applyBtn.href = `mailto:${job.email}`;
+            } else if (job.website) {
+                applyBtn.href = job.website;
+            } else if (job.phone) {
+                applyBtn.href = `tel:${job.phone}`;
+            } else {
+                applyBtn.href = '#';
+                applyBtn.onclick = (e) => {
+                    e.preventDefault();
+                    navigator.clipboard.writeText(job.contact || '');
+                    alert('คัดลอกข้อมูลติดต่อเรียบร้อยแล้ว: ' + (job.contact || ''));
+                };
+            }
+        }
+
+        // Fetch other jobs from the same company name
+        async function fetchOtherCompanyJobs(companyName, currentJobId) {
+            if (!companyName) return;
+
+            try {
+                const snapshot = await db.collection("jobs")
+                    .where("company", "==", companyName)
+                    .limit(6)
+                    .get();
+
+                const otherJobs = [];
+                snapshot.forEach(doc => {
+                    if (doc.id !== currentJobId) {
+                        otherJobs.push({ id: doc.id, ...doc.data() });
+                    }
+                });
+
+                const section = document.getElementById('companyJobsSection');
+                const container = document.getElementById('companyJobsList');
+                document.getElementById('otherCompanyName').textContent = companyName;
+
+                if (otherJobs.length > 0) {
+                    document.getElementById('otherCompanyCount').textContent = `${otherJobs.length} ตำแหน่ง`;
+                    container.innerHTML = otherJobs.map(other => `
+                        <a href="job-detail.html?id=${other.id}" target="_blank" class="p-4 bg-slate-50 hover:bg-brand-50/80 border border-slate-200 hover:border-brand-300 rounded-xl transition-all flex items-center justify-between group shadow-2xs">
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-sm group-hover:text-brand-600 transition-colors line-clamp-1">
+                                    ${escapeHtml(other.title)}
+                                </h4>
+                                <div class="flex items-center gap-2 text-xs text-slate-500 mt-1">
+                                    <span class="text-emerald-600 font-bold">${escapeHtml(other.salary)}</span>
+                                    <span>•</span>
+                                    <span>${escapeHtml(other.location || 'ไม่ระบุ')}</span>
+                                </div>
+                            </div>
+                            <div class="w-8 h-8 rounded-lg bg-white group-hover:bg-brand-600 group-hover:text-white text-slate-400 flex items-center justify-center shrink-0 border border-slate-200 transition-colors text-xs">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </div>
+                        </a>
+                    `).join('');
+
+                    section.classList.remove('hidden');
+                } else {
+                    section.classList.add('hidden');
+                }
+
+            } catch (err) {
+                console.warn("Could not load other company jobs:", err);
+            }
+        }
+
+        // Helpers
+        function getCategoryName(cat) {
+            const map = {
+                HR: 'ทรัพยากรบุคคล (HR)',
+                IT: 'ไอที / ซอฟต์แวร์',
+                Marketing: 'การตลาด',
+                Sales: 'งานขาย / บริการ',
+                Accounting: 'บัญชี / การเงิน',
+                General: 'งานทั่วไป'
+            };
+            return map[cat] || cat;
+        }
+
+        function getCategoryBadgeColor(cat) {
+            const map = {
+                HR: 'bg-purple-100 text-purple-700',
+                IT: 'bg-blue-100 text-brand-700',
+                Marketing: 'bg-rose-100 text-rose-700',
+                Sales: 'bg-amber-100 text-amber-800',
+                Accounting: 'bg-emerald-100 text-emerald-800',
+                General: 'bg-slate-100 text-slate-700'
+            };
+            return map[cat] || 'bg-slate-100 text-slate-700';
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        // Init Page
+        window.onload = function() {
+            loadJobDetail();
+        };
+    </script>
+</body>
+</html>
