@@ -39,7 +39,9 @@ service cloud.firestore {
                           (resource.data.status == 'draft' && request.resource.data.status in ['draft','pending','closed']) ||
                           (resource.data.status == 'pending' && request.resource.data.status in ['pending','closed']) ||
                           (resource.data.status == 'rejected' && request.resource.data.status in ['pending','closed']) ||
-                          (resource.data.status == 'published' && request.resource.data.status == 'closed')
+                          (resource.data.status == 'published' && request.resource.data.status in ['paused','closed']) ||
+                          (resource.data.status == 'paused' && request.resource.data.status in ['pending','closed']) ||
+                          (resource.data.status == 'closed' && request.resource.data.status == 'pending')
                         ));
       allow delete: if admin();
     }
