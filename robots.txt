@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /admin-migrate.html
+
+Sitemap: https://webhub.asia/sitemap.xml
