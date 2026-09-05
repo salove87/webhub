@@ -2,6 +2,12 @@ name: Prerender Articles
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'articles/**'
+      - 'articles-static.json'
+      - 'sitemap.xml'
   schedule:
     - cron: '*/5 * * * *'
 
