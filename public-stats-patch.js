@@ -1,0 +1,8 @@
+import{getApp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import{getFirestore,doc,getDoc,getDocs,collection,query,where,setDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+const app=getApp(),auth=getAuth(app),db=getFirestore(app),$=s=>document.querySelector(s);
+function render(d={}){if($('#candidateStat'))$('#candidateStat').textContent=Number(d.candidateCount||0).toLocaleString('th-TH');if($('#companyStat')&&d.companyCount!=null)$('#companyStat').textContent=Number(d.companyCount||0).toLocaleString('th-TH');if($('#jobStat')&&d.jobCount!=null)$('#jobStat').textContent=Number(d.jobCount||0).toLocaleString('th-TH')}
+async function loadPublic(){try{const s=await getDoc(doc(db,'publicStats','site'));if(s.exists())render(s.data())}catch(e){console.warn('public stats',e)}}
+async function refreshAsAdmin(u){if(!u)return;try{const me=await getDoc(doc(db,'users',u.uid));if(!me.exists()||me.data().role!=='admin'||me.data().status==='suspended')return;const [users,companies,jobs]=await Promise.all([getDocs(collection(db,'users')),getDocs(query(collection(db,'companies'),where('verified','==',true))),getDocs(query(collection(db,'jobs'),where('status','==','published')))]);const data={candidateCount:users.docs.filter(d=>d.data().role==='candidate'&&d.data().status!=='suspended').length,companyCount:companies.size,jobCount:jobs.size,updatedAt:serverTimestamp()};await setDoc(doc(db,'publicStats','site'),data,{merge:true});render(data)}catch(e){console.warn('refresh public stats',e)}}
+loadPublic();onAuthStateChanged(auth,u=>refreshAsAdmin(u));
