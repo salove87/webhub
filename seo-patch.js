@@ -15,6 +15,15 @@ ensureMeta('meta[name="twitter:card"]',{name:'twitter:card',content:'summary_lar
 ensureMeta('meta[name="twitter:title"]',{name:'twitter:title',content:'WebHub Jobs | งานที่ใช่ คนที่พร้อม'});
 ensureMeta('meta[name="twitter:description"]',{name:'twitter:description',content:'แพลตฟอร์มหางานและหาคนสำหรับประเทศไทย ค้นหางาน สมัครงาน และประกาศรับสมัครงานในที่เดียว'});
 
+// Google AdSense site verification/loader. This only adds the official script to <head> and does not alter page layout.
+if(!head.querySelector('script[src*="pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]')){
+  const ads=document.createElement('script');
+  ads.async=true;
+  ads.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3455272174981579';
+  ads.crossOrigin='anonymous';
+  head.appendChild(ads);
+}
+
 const schema={
   '@context':'https://schema.org',
   '@graph':[
