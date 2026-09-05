@@ -38,3 +38,4 @@ import("./account-ui-patch.js?v=20260905-1");
 import("./registration-terms.js?v=20260905-1");
 import("./top-nav-patch.js?v=20260905-1");
 import("./employer-dashboard-patch.js?v=20260905-1");
+import("./applicant-manager-patch.js?v=20260905-1");
