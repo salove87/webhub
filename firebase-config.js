@@ -2,6 +2,6 @@ export const firebaseConfig={apiKey:"AIzaSyDZSY0jxEGzTG0rualNAgH_Ly45Ve_b3SY",au
 if(location.pathname.endsWith('/admin.html')){
   setTimeout(()=>{
     import('./admin-company-email-patch.js?v=20260905-1');
-    import('./article-admin-v2.js?v=20260905-3');
+    import('./admin-articles-link.js?v=20260905-1');
   },0);
 }
