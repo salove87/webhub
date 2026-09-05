@@ -90,6 +90,11 @@ service cloud.firestore {
       allow read, update, delete: if admin();
     }
 
+    match /articles/{id} {
+      allow read: if resource.data.status == 'published' || admin();
+      allow create, update, delete: if admin();
+    }
+
     match /{document=**} { allow read, write: if false; }
   }
 }
