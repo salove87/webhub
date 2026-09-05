@@ -33,4 +33,5 @@ const postForm=$("#postForm");if(postForm)postForm.onsubmit=async e=>{e.preventD
 const draft=$("#saveDraftBtn");if(draft)draft.onclick=async()=>{try{const d=formData();if(!d.title&&!d.companyName)return toast("กรอกชื่อบริษัทหรือตำแหน่งก่อนบันทึก");await createJob("draft");toast("บันทึกฉบับร่างแล้ว")}catch(e){toast(errText(e))}};
 
 if(auth.currentUser)loadCompany();
-import("./application-patch.js?v=20260905-1");
+import("./application-patch.js?v=20260905-2");
+import("./account-ui-patch.js?v=20260905-1");
