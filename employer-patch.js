@@ -1,0 +1,32 @@
+import{getApp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import{getAuth}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import{getFirestore,doc,getDoc,setDoc,collection,addDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+const app=getApp(),auth=getAuth(app),db=getFirestore(app);
+const $=s=>document.querySelector(s);
+let companyLogo="",companyVerified=false;
+
+const toast=m=>{const e=$("#toast");if(!e)return;e.textContent=m;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),2800)};
+const errText=e=>(e?.code||e?.message||"").includes("permission-denied")?"ไม่มีสิทธิ์ทำรายการนี้ กรุณาตรวจสอบว่า Firestore Rules เป็นเวอร์ชันล่าสุด":(e?.message||"เกิดข้อผิดพลาด กรุณาลองใหม่");
+
+async function profile(){const u=auth.currentUser;if(!u)return null;const s=await getDoc(doc(db,"users",u.uid));return s.exists()?s.data():null}
+async function loadCompany(){const u=auth.currentUser;if(!u)return{};const s=await getDoc(doc(db,"companies",u.uid));const d=s.exists()?s.data():{};companyLogo=d.companyLogo||companyLogo||"";companyVerified=d.verified===true;const f=$("#postForm");if(f){const vals={companyName:d.name||"",industry:d.industry||"",companySize:d.companySize||"",companyWebsite:d.companyWebsite||"",contactEmail:d.contactEmail||u.email||"",contactPhone:d.contactPhone||"",lineId:d.lineId||"",facebookUrl:d.facebookUrl||"",linkedinUrl:d.linkedinUrl||"",socialUrl:d.socialUrl||""};Object.entries(vals).forEach(([k,v])=>{if(f.elements[k]&&!f.elements[k].value)f.elements[k].value=v})}showLogo();return d}
+function showLogo(){const p=$("#logoPreview");if(!p)return;if(companyLogo)p.innerHTML=`<img src="${companyLogo}" alt="โลโก้บริษัท"><small style="display:block;margin-top:6px;color:#059669;font-weight:700">✓ ใช้โลโก้บริษัทที่บันทึกไว้</small>`;else p.innerHTML="<span>LOGO</span>"}
+
+async function compress(file){if(!file?.type?.startsWith("image/"))throw new Error("กรุณาเลือกไฟล์รูปภาพ");if(file.size>12*1024*1024)throw new Error("ไฟล์ต้นฉบับใหญ่เกิน 12 MB");const url=URL.createObjectURL(file);try{const img=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>no(new Error("ไม่สามารถอ่านไฟล์รูปได้"));i.src=url});const max=320,scale=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight)),w=Math.max(1,Math.round(img.naturalWidth*scale)),h=Math.max(1,Math.round(img.naturalHeight*scale));const c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d");x.imageSmoothingEnabled=true;x.imageSmoothingQuality="high";x.drawImage(img,0,0,w,h);let q=.82,data=c.toDataURL("image/webp",q);if(!data.startsWith("data:image/webp"))data=c.toDataURL("image/jpeg",q);while(data.length>180000&&q>.48){q-=.08;data=c.toDataURL(data.startsWith("data:image/webp")?"image/webp":"image/jpeg",q)}return data}finally{URL.revokeObjectURL(url)}}
+
+async function saveLogoNow(data){const u=auth.currentUser;if(!u)return;const s=await getDoc(doc(db,"companies",u.uid));if(s.exists()){await setDoc(doc(db,"companies",u.uid),{companyLogo:data,updatedAt:serverTimestamp()},{merge:true})}else{const p=await profile();await setDoc(doc(db,"companies",u.uid),{name:p?.displayName||u.displayName||"บริษัท",contactEmail:p?.email||u.email||"",companyLogo:data,verified:false,status:"active",createdAt:serverTimestamp(),updatedAt:serverTimestamp()})}}
+
+const logoInput=$("#companyLogo");if(logoInput)logoInput.onchange=async()=>{const file=logoInput.files?.[0];if(!file)return;const preview=$("#logoPreview");logoInput.disabled=true;if(preview)preview.innerHTML='<span style="font-size:12px">กำลังบีบอัด…</span>';try{companyLogo=await compress(file);await saveLogoNow(companyLogo);const kb=Math.max(1,Math.round((companyLogo.length*3/4)/1024));if(preview)preview.innerHTML=`<img src="${companyLogo}" alt="โลโก้บริษัท"><small style="display:block;margin-top:6px;color:#059669;font-weight:700">✓ อัปโหลดสำเร็จ · ${kb} KB</small>`;toast("บันทึกโลโก้บริษัทแล้ว ครั้งต่อไปไม่ต้องอัปโหลดซ้ำ")}catch(e){toast(errText(e));showLogo()}finally{logoInput.disabled=false}};
+
+document.querySelectorAll('[data-post-job]').forEach(b=>b.addEventListener("click",()=>setTimeout(loadCompany,0)));
+
+function formData(){const f=$("#postForm"),d=Object.fromEntries(new FormData(f));delete d.companyLogo;d.salaryMin=Number(d.salaryMin)||0;d.salaryMax=Number(d.salaryMax)||0;d.vacancies=Number(d.vacancies)||1;return d}
+async function saveCompany(d){const u=auth.currentUser;if(!u)throw new Error("กรุณาเข้าสู่ระบบ");const s=await getDoc(doc(db,"companies",u.uid));const common={name:d.companyName||"",industry:d.industry||"",companySize:d.companySize||"",companyWebsite:d.companyWebsite||"",contactEmail:d.contactEmail||u.email||"",contactPhone:d.contactPhone||"",lineId:d.lineId||"",facebookUrl:d.facebookUrl||"",linkedinUrl:d.linkedinUrl||"",socialUrl:d.socialUrl||"",companyLogo:companyLogo||s.data()?.companyLogo||"",updatedAt:serverTimestamp()};if(s.exists()){await setDoc(doc(db,"companies",u.uid),common,{merge:true});companyVerified=s.data().verified===true}else{await setDoc(doc(db,"companies",u.uid),{...common,verified:false,status:"active",createdAt:serverTimestamp()});companyVerified=false}companyLogo=common.companyLogo;return common}
+async function canPost(){const p=await profile();if(!p||p.role!=="employer")throw new Error("บัญชีนี้ไม่ใช่บัญชีนายจ้าง");if(p.status==="suspended")throw new Error("บัญชีนี้ถูกระงับการใช้งาน");return p}
+async function createJob(status){await canPost();const d=formData();await saveCompany(d);await addDoc(collection(db,"jobs"),{...d,companyLogo,employerId:auth.currentUser.uid,status,companyVerified,viewCount:0,applicationCount:0,createdAt:serverTimestamp(),updatedAt:serverTimestamp()})}
+
+const postForm=$("#postForm");if(postForm)postForm.onsubmit=async e=>{e.preventDefault();const msg=$("#postMessage");if(msg)msg.textContent="";try{await createJob("pending");toast("ส่งประกาศแล้ว อยู่ระหว่างตรวจสอบ");postForm.reset();await loadCompany();const d=$("#postDialog");if(d?.open)d.close();location.hash="employer"}catch(e){if(msg)msg.textContent=errText(e);toast(errText(e))}};
+const draft=$("#saveDraftBtn");if(draft)draft.onclick=async()=>{try{const d=formData();if(!d.title&&!d.companyName)return toast("กรอกชื่อบริษัทหรือตำแหน่งก่อนบันทึก");await createJob("draft");toast("บันทึกฉบับร่างแล้ว")}catch(e){toast(errText(e))}};
+
+if(auth.currentUser)loadCompany();
