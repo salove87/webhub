@@ -4,11 +4,47 @@ service cloud.firestore { match /databases/{database}/documents {
   function me(){ return get(/databases/$(database)/documents/users/$(request.auth.uid)); }
   function role(r){ return signedIn() && me().data.role == r; }
   function admin(){ return role('admin'); }
-  match /users/{uid}{ allow create: if signedIn() && request.auth.uid==uid && request.resource.data.role in ['candidate','employer']; allow read,update: if signedIn() && (request.auth.uid==uid || admin()); allow delete: if admin(); match /savedJobs/{id}{allow read,write: if signedIn() && request.auth.uid==uid;} }
-  match /jobs/{id}{ allow read: if resource.data.status=='published' || (signedIn() && (resource.data.employerId==request.auth.uid || admin())); allow create: if signedIn() && (role('employer')||admin()) && request.resource.data.employerId==request.auth.uid && request.resource.data.status=='pending'; allow update: if admin() || (signedIn() && resource.data.employerId==request.auth.uid && request.resource.data.status=='pending' && request.resource.data.employerId==resource.data.employerId); allow delete: if admin(); }
-  match /applications/{id}{ allow create: if role('candidate') && request.resource.data.candidateId==request.auth.uid && id==request.resource.data.jobId+'_'+request.auth.uid; allow read: if signedIn() && (resource.data.candidateId==request.auth.uid || resource.data.companyId==request.auth.uid || admin()); allow update: if signedIn() && (resource.data.companyId==request.auth.uid || admin()); allow delete: if admin(); }
-  match /companies/{id}{ allow read: if resource.data.verified==true || (signedIn() && (id==request.auth.uid || admin())); allow create: if role('employer') && id==request.auth.uid; allow update: if admin() || (role('employer') && id==request.auth.uid && request.resource.data.verified==resource.data.verified); allow delete: if admin(); }
-  match /candidateProfiles/{uid}{ allow read: if signedIn() && (request.auth.uid==uid || admin() || (role('employer') && resource.data.searchable==true)); allow create,update: if role('candidate') && request.auth.uid==uid; allow delete: if admin() || (signedIn()&&request.auth.uid==uid); }
-  match /reports/{id}{ allow create: if signedIn() && request.resource.data.reporterId==request.auth.uid; allow read,update,delete: if admin(); }
+  function active(){ return signedIn() && me().data.status != 'suspended'; }
+
+  match /users/{uid}{
+    allow create: if signedIn() && request.auth.uid==uid && request.resource.data.role in ['candidate','employer'];
+    allow read: if signedIn() && (request.auth.uid==uid || admin());
+    allow update: if admin() || (signedIn() && request.auth.uid==uid && request.resource.data.role==resource.data.role && request.resource.data.status==resource.data.status);
+    allow delete: if admin();
+    match /savedJobs/{id}{ allow read,write: if active() && request.auth.uid==uid; }
+  }
+
+  match /jobs/{id}{
+    allow read: if resource.data.status=='published' || (signedIn() && (resource.data.employerId==request.auth.uid || admin()));
+    allow create: if active() && role('employer') && request.resource.data.employerId==request.auth.uid && request.resource.data.status=='pending';
+    allow update: if admin() || (active() && role('employer') && resource.data.employerId==request.auth.uid && request.resource.data.employerId==resource.data.employerId && request.resource.data.status=='pending');
+    allow delete: if admin();
+  }
+
+  match /applications/{id}{
+    allow create: if active() && role('candidate') && request.resource.data.candidateId==request.auth.uid && id==request.resource.data.jobId+'_'+request.auth.uid;
+    allow read: if signedIn() && (resource.data.candidateId==request.auth.uid || resource.data.companyId==request.auth.uid || admin());
+    allow update: if active() && signedIn() && (resource.data.companyId==request.auth.uid || admin());
+    allow delete: if admin();
+  }
+
+  match /companies/{id}{
+    allow read: if resource.data.verified==true || (signedIn() && (id==request.auth.uid || admin()));
+    allow create: if active() && role('employer') && id==request.auth.uid && request.resource.data.verified==false;
+    allow update: if admin() || (active() && role('employer') && id==request.auth.uid && request.resource.data.verified==resource.data.verified);
+    allow delete: if admin();
+  }
+
+  match /candidateProfiles/{uid}{
+    allow read: if signedIn() && (request.auth.uid==uid || admin() || (role('employer') && resource.data.searchable==true));
+    allow create,update: if active() && role('candidate') && request.auth.uid==uid;
+    allow delete: if admin() || (signedIn() && request.auth.uid==uid);
+  }
+
+  match /reports/{id}{
+    allow create: if active() && signedIn() && request.resource.data.reporterId==request.auth.uid;
+    allow read,update,delete: if admin();
+  }
+
   match /{document=**}{ allow read,write: if false; }
 } }
