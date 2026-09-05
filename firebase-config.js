@@ -16,7 +16,8 @@ if(location.pathname.endsWith('/admin.html')){
   document.addEventListener('DOMContentLoaded',addArticlesLink,{once:true});
   const articleLinkTimer=setInterval(addArticlesLink,300);
   setTimeout(()=>clearInterval(articleLinkTimer),15000);
-  setTimeout(()=>{
-    import('./admin-company-email-patch.js?v=20260905-1');
-  },0);
+  setTimeout(()=>{import('./admin-company-email-patch.js?v=20260905-1');},0);
+}
+if(location.pathname.endsWith('/admin-articles.html')){
+  setTimeout(()=>{import('./admin-articles-draft-loader.js?v=20260905-1');},0);
 }
