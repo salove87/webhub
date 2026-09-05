@@ -80,6 +80,11 @@ service cloud.firestore {
       allow delete: if admin() || (active() && request.auth.uid == uid);
     }
 
+    match /publicStats/{id} {
+      allow read: if true;
+      allow create, update, delete: if admin();
+    }
+
     match /reports/{id} {
       allow create: if active() && request.resource.data.reporterId == request.auth.uid;
       allow read, update, delete: if admin();
