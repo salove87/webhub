@@ -40,4 +40,5 @@ import("./top-nav-patch.js?v=20260905-1");
 import("./employer-dashboard-patch.js?v=20260905-1");
 import("./applicant-manager-patch.js?v=20260905-1");
 import("./companies-patch.js?v=20260905-1");
-import("./mobile-dialog-patch.js?v=20260905-1");
+import("./mobile-dialog-patch.js?v=20260905-2");
+import("./mobile-header-patch.js?v=20260905-1");
