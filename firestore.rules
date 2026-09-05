@@ -51,7 +51,14 @@ service cloud.firestore {
                     && get(/databases/$(database)/documents/jobs/$(request.resource.data.jobId)).data.status == 'published';
       allow read: if active() && (resource.data.candidateId == request.auth.uid
                   || resource.data.companyId == request.auth.uid || admin());
-      allow update: if active() && (resource.data.companyId == request.auth.uid || admin());
+      allow update: if admin()
+                    || (role('employer') && resource.data.companyId == request.auth.uid)
+                    || (role('candidate')
+                        && resource.data.candidateId == request.auth.uid
+                        && request.resource.data.candidateId == resource.data.candidateId
+                        && request.resource.data.jobId == resource.data.jobId
+                        && request.resource.data.companyId == resource.data.companyId
+                        && request.resource.data.status == 'submitted');
       allow delete: if admin();
     }
 
