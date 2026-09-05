@@ -47,3 +47,4 @@ import("./companies-patch.js?v=20260905-1");
 import("./mobile-dialog-patch.js?v=20260905-2");
 import("./mobile-header-patch.js?v=20260905-1");
 import("./profile-settings.js?v=20260905-1");
+import("./seo-patch.js?v=20260905-1");
