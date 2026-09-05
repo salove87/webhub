@@ -8,7 +8,7 @@ const safe=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"
 const toast=m=>{const e=$("#toast");e.textContent=m;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),2600)};
 const money=n=>new Intl.NumberFormat("th-TH").format(Number(n)||0);
 const formatSalary=j=>j.salaryMin||j.salaryMax?`${j.salaryMin?money(j.salaryMin):"ไม่ระบุ"} – ${j.salaryMax?money(j.salaryMax):"ไม่ระบุ"} บาท`:"ตามตกลง";
-function openDialog(id){$(id).showModal()} function closeDialogs(){[$("#authDialog"),$("#jobDialog"),$("#postDialog")].forEach(x=>x.open&&x.close())}
+function openDialog(id){const d=$(id);if(!d.open)d.showModal()} function closeDialogs(){[$("#authDialog"),$("#jobDialog"),$("#postDialog")].forEach(x=>x.open&&x.close())}
 $$('[data-close]').forEach(b=>b.onclick=closeDialogs);$("#menuBtn").onclick=()=>$("#nav").classList.toggle("open");
 
 async function loadJobs(reset=true){try{if(reset){jobs=[];lastDoc=null}let q=query(collection(db,"jobs"),where("status","==","published"),orderBy("publishedAt","desc"),limit(pageSize));if(lastDoc)q=query(collection(db,"jobs"),where("status","==","published"),orderBy("publishedAt","desc"),startAfter(lastDoc),limit(pageSize));const snap=await getDocs(q);lastDoc=snap.docs.at(-1)||lastDoc;jobs.push(...snap.docs.map(d=>({id:d.id,...d.data()})));renderJobs();$("#jobStat").textContent=jobs.length+(snap.size===pageSize?"+":"")}catch(e){console.error(e);$("#jobsGrid").innerHTML='<div class="empty">ยังไม่พบงานที่เผยแพร่ หรือกำลังรอการตั้งค่า Firestore Index</div>'}}
