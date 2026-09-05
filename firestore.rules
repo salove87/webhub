@@ -26,7 +26,7 @@ service cloud.firestore {
                   || (active() && (resource.data.employerId == request.auth.uid || admin()));
       allow create: if admin() || (role('employer')
                     && request.resource.data.employerId == request.auth.uid
-                    && request.resource.data.status == 'pending'
+                    && request.resource.data.status in ['pending','draft']
                     && request.resource.data.companyVerified == false);
       allow update: if admin()
                     || (role('employer')
@@ -34,6 +34,7 @@ service cloud.firestore {
                         && request.resource.data.employerId == resource.data.employerId
                         && request.resource.data.companyVerified == resource.data.companyVerified
                         && (
+                          (resource.data.status == 'draft' && request.resource.data.status in ['draft','pending','closed']) ||
                           (resource.data.status == 'pending' && request.resource.data.status in ['pending','closed']) ||
                           (resource.data.status == 'rejected' && request.resource.data.status in ['pending','closed']) ||
                           (resource.data.status == 'published' && request.resource.data.status == 'closed')
