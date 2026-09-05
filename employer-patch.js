@@ -1,5 +1,5 @@
 import{getApp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import{getAuth}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import{getAuth,sendPasswordResetEmail}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import{getFirestore,doc,getDoc,setDoc,collection,addDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 const app=getApp(),auth=getAuth(app),db=getFirestore(app);
@@ -8,6 +8,9 @@ let companyLogo="",companyVerified=false;
 
 const toast=m=>{const e=$("#toast");if(!e)return;e.textContent=m;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),2800)};
 const errText=e=>(e?.code||e?.message||"").includes("permission-denied")?"ไม่มีสิทธิ์ทำรายการนี้ กรุณาตรวจสอบว่า Firestore Rules เป็นเวอร์ชันล่าสุด":(e?.message||"เกิดข้อผิดพลาด กรุณาลองใหม่");
+
+function setupPasswordReset(){const form=$("#authForm");if(!form||$("#forgotPasswordBtn"))return;const btn=document.createElement("button");btn.type="button";btn.id="forgotPasswordBtn";btn.className="text-btn";btn.textContent="ลืมรหัสผ่าน?";const submit=form.querySelector('button[type="submit"]');if(submit)form.insertBefore(btn,submit);else form.appendChild(btn);btn.onclick=async()=>{const email=$("#email")?.value.trim();if(!email){toast("กรุณากรอกอีเมลที่ใช้สมัครสมาชิกก่อน");$("#email")?.focus();return}btn.disabled=true;const old=btn.textContent;btn.textContent="กำลังส่งลิงก์รีเซ็ต…";try{await sendPasswordResetEmail(auth,email);toast("ส่งลิงก์ตั้งรหัสผ่านใหม่ไปที่อีเมลแล้ว กรุณาตรวจสอบกล่องจดหมายและ Spam");btn.textContent="ส่งลิงก์แล้ว ✓"}catch(e){const code=e?.code||"";if(code.includes("invalid-email"))toast("รูปแบบอีเมลไม่ถูกต้อง");else if(code.includes("too-many-requests"))toast("มีการขอรีเซ็ตรหัสผ่านหลายครั้งเกินไป กรุณารอสักครู่");else toast("ไม่สามารถส่งลิงก์รีเซ็ตรหัสผ่านได้ กรุณาตรวจสอบอีเมลและลองใหม่");btn.textContent=old}finally{btn.disabled=false;setTimeout(()=>{btn.textContent="ลืมรหัสผ่าน?"},3500)}}}
+setupPasswordReset();
 
 async function profile(){const u=auth.currentUser;if(!u)return null;const s=await getDoc(doc(db,"users",u.uid));return s.exists()?s.data():null}
 async function loadCompany(){const u=auth.currentUser;if(!u)return{};const s=await getDoc(doc(db,"companies",u.uid));const d=s.exists()?s.data():{};companyLogo=d.companyLogo||companyLogo||"";companyVerified=d.verified===true;const f=$("#postForm");if(f){const vals={companyName:d.name||"",industry:d.industry||"",companySize:d.companySize||"",companyWebsite:d.companyWebsite||"",contactEmail:d.contactEmail||u.email||"",contactPhone:d.contactPhone||"",lineId:d.lineId||"",facebookUrl:d.facebookUrl||"",linkedinUrl:d.linkedinUrl||"",socialUrl:d.socialUrl||""};Object.entries(vals).forEach(([k,v])=>{if(f.elements[k]&&!f.elements[k].value)f.elements[k].value=v})}showLogo();return d}
