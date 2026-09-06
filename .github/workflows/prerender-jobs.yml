@@ -1,0 +1,45 @@
+name: Prerender Jobs
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'jobs/**'
+      - 'jobs-static.json'
+  schedule:
+    - cron: '*/5 * * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: prerender-jobs
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Generate static jobs
+        run: node scripts/generate-static-jobs.mjs
+      - name: Commit generated pages
+        run: |
+          if git diff --quiet -- jobs jobs-static.json; then
+            echo "No changes"
+            exit 0
+          fi
+          git config user.name "WebHub Job Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add jobs jobs-static.json
+          git commit -m "Auto prerender published jobs"
+          git pull --rebase origin main
+          git push
