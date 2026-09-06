@@ -1,12 +1,13 @@
 (()=>{
-  const HEADER_LOGO='assets/brand/webhub-jobs-logo-header.png';
+  const HEADER_LOGO='assets/brand/webhub-jobs-logo-new.png?v=20260906-1';
   const FAVICON='assets/brand/webhub-jobs-favicon-192.png';
 
   function applyBrandLogo(){
     document.querySelectorAll('a.brand').forEach(a=>{
-      if(a.dataset.webhubBrandLogo==='1')return;
       a.dataset.webhubBrandLogo='1';
       a.setAttribute('aria-label','WebHub Jobs');
+      const img=a.querySelector('img.webhub-brand-logo');
+      if(img){if(img.getAttribute('src')!==HEADER_LOGO)img.src=HEADER_LOGO;return}
       a.innerHTML=`<img class="webhub-brand-logo" src="${HEADER_LOGO}" alt="WebHub Jobs">`;
     });
   }
@@ -23,9 +24,9 @@
     style.dataset.webhubBrandLogo='1';
     style.textContent=`
       a.brand[data-webhub-brand-logo="1"]{display:inline-flex!important;align-items:center!important;line-height:1!important;overflow:visible!important}
-      .webhub-brand-logo{display:block!important;width:auto!important;height:48px!important;max-width:190px!important;object-fit:contain!important}
-      footer .webhub-brand-logo{height:54px!important;max-width:210px!important}
-      @media(max-width:640px){.webhub-brand-logo{height:40px!important;max-width:152px!important}footer .webhub-brand-logo{height:46px!important;max-width:180px!important}}
+      .webhub-brand-logo{display:block!important;width:auto!important;height:48px!important;max-width:230px!important;object-fit:contain!important}
+      footer .webhub-brand-logo{height:54px!important;max-width:250px!important}
+      @media(max-width:640px){.webhub-brand-logo{height:40px!important;max-width:190px!important}footer .webhub-brand-logo{height:46px!important;max-width:210px!important}}
     `;
     document.head.appendChild(style);
   }
