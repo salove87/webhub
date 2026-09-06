@@ -33,13 +33,13 @@ jobs:
         run: node scripts/generate-static-jobs.mjs
       - name: Commit generated pages
         run: |
-          if git diff --quiet -- jobs jobs-static.json; then
+          git add -A jobs jobs-static.json
+          if git diff --cached --quiet; then
             echo "No changes"
             exit 0
           fi
           git config user.name "WebHub Job Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add jobs jobs-static.json
           git commit -m "Auto prerender published jobs"
           git pull --rebase origin main
           git push
