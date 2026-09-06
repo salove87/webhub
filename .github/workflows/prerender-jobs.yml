@@ -34,6 +34,7 @@ jobs:
           node scripts/generate-static-jobs.mjs
           node scripts/english-job-slugs.mjs
           node scripts/inject-ga4-static.mjs jobs
+          node scripts/enhance-static-job-share.mjs
       - name: Commit generated pages
         run: |
           git add -A jobs jobs-static.json
