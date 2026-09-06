@@ -30,7 +30,9 @@ jobs:
         with:
           node-version: '20'
       - name: Generate static jobs
-        run: node scripts/generate-static-jobs.mjs
+        run: |
+          node scripts/generate-static-jobs.mjs
+          node scripts/english-job-slugs.mjs
       - name: Commit generated pages
         run: |
           git add -A jobs jobs-static.json
