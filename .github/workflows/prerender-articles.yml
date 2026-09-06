@@ -32,14 +32,19 @@ jobs:
           node-version: '20'
       - name: Generate static articles
         run: node scripts/generate-static-articles.mjs
+      - name: Validate generated article output
+        run: |
+          test -f articles-static.json
+          test -f sitemap.xml
+          node -e "const fs=require('fs'); const slugs=JSON.parse(fs.readFileSync('articles-static.json','utf8')); for (const slug of slugs) { const p='articles/'+slug+'/index.html'; if (!fs.existsSync(p)) throw new Error('Missing prerender page: '+p); } console.log('Validated '+slugs.length+' prerendered article(s)');"
       - name: Commit generated pages
         run: |
-          if git diff --quiet -- articles articles-static.json sitemap.xml; then
+          git add -A articles articles-static.json sitemap.xml
+          if git diff --cached --quiet; then
             echo "No changes"
             exit 0
           fi
           git config user.name "WebHub Article Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add articles articles-static.json sitemap.xml
           git commit -m "Auto prerender published articles"
           git push
