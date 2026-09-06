@@ -31,7 +31,9 @@ jobs:
         with:
           node-version: '20'
       - name: Generate static articles
-        run: node scripts/generate-static-articles.mjs
+        run: |
+          node scripts/generate-static-articles.mjs
+          node scripts/inject-ga4-static.mjs articles
       - name: Validate generated article output
         run: |
           test -f articles-static.json
