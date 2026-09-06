@@ -1,5 +1,11 @@
 [
   {
+    "id":"hr-not-contacting-after-job-application",
+    "file":"hr-not-contacting-after-job-application.json",
+    "title":"สมัครงานไปแล้ว HR ไม่ติดต่อกลับ ต้องรอกี่วัน และควรทำอย่างไรต่อ?",
+    "updated":"2026-09-06"
+  },
+  {
     "id":"what-age-is-it-harder-to-change-jobs",
     "file":"what-age-is-it-harder-to-change-jobs.json",
     "title":"อายุเท่าไรเปลี่ยนงานยากขึ้น? 30 35 40+ ยังหางานใหม่ได้ไหม",
