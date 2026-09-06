@@ -3,7 +3,7 @@ import path from 'node:path';
 
 const root = process.cwd();
 const manifestPath = path.join(root, 'jobs-static.json');
-const MARKER = 'webhub-rich-job-share-v1';
+const MARKER = 'webhub-rich-job-share-v2';
 
 async function readManifest() {
   try {
@@ -20,7 +20,8 @@ function enhancementScript() {
   function shareText(){
     const title=clean(document.querySelector('h1')?.textContent);
     const company=clean(document.querySelector('.company-name')?.textContent).replace(/●/g,'').trim();
-    const location=clean(document.querySelector('.meta span')?.textContent);
+    const locationText=clean(document.querySelector('.meta span')?.textContent);
+    const jobUrl=window.location.href;
     const basics=[...document.querySelectorAll('.info-grid .info-row')].map(row=>{
       const label=clean(row.querySelector('small')?.textContent);
       const value=clean(row.querySelector('b')?.textContent);
@@ -29,13 +30,13 @@ function enhancementScript() {
     return [
       title?'ตำแหน่งงาน: '+title:'',
       company?'บริษัท: '+company:'',
-      location,
+      locationText,
       basics.length?'':'',
       basics.length?'ข้อมูลพื้นฐาน':'',
       ...basics,
       '',
       'ดูรายละเอียดและสมัครงาน:',
-      location.href
+      jobUrl
     ].filter((v,i,a)=>!(v===''&&a[i-1]==='')).join('\\n');
   }
   function install(){
@@ -50,7 +51,8 @@ function enhancementScript() {
       a.href='#';
       a.addEventListener('click',function(e){
         e.preventDefault();
-        window.open('https://line.me/R/share?text='+encodeURIComponent(shareText()),'_blank','noopener');
+        const text=shareText();
+        window.open('https://line.me/R/msg/text/?'+encodeURIComponent(text),'_blank','noopener');
       });
       const copy=[...box.querySelectorAll('button')].find(b=>clean(b.textContent).includes('คัดลอก'));
       box.insertBefore(a,copy||null);
