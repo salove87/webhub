@@ -21,4 +21,5 @@ if(location.pathname.endsWith('/admin.html')){
 if(location.pathname.endsWith('/admin-articles.html')){
   setTimeout(()=>{import('./admin-articles-draft-loader.js?v=20260905-1');},0);
   setTimeout(()=>{import('./admin-static-link-patch.js?v=20260905-1');},0);
+  setTimeout(()=>{import('./admin-article-publish-flow.js?v=20260906-1');},0);
 }
