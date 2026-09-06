@@ -1,4 +1,20 @@
 export const firebaseConfig={apiKey:"AIzaSyDZSY0jxEGzTG0rualNAgH_Ly45Ve_b3SY",authDomain:"jobhub-a0de5.firebaseapp.com",projectId:"jobhub-a0de5",storageBucket:"jobhub-a0de5.firebasestorage.app",messagingSenderId:"390768908775",appId:"1:390768908775:web:1bd01cba98df640e228542",measurementId:"G-2W4VFTTKJB"};
+
+// Google Analytics 4 — public pages only. Admin traffic is intentionally excluded.
+const isAdminPage=/\/(admin(?:-[^/]*)?\.html)$/.test(location.pathname);
+if(!isAdminPage&&!window.__webhubGA4){
+  window.__webhubGA4=true;
+  const GA_ID='G-ZQ69FR849J';
+  window.dataLayer=window.dataLayer||[];
+  window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};
+  window.gtag('js',new Date());
+  window.gtag('config',GA_ID);
+  const ga=document.createElement('script');
+  ga.async=true;
+  ga.src=`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+  document.head.appendChild(ga);
+}
+
 if(location.pathname.endsWith('/admin.html')){
   const addArticlesLink=()=>{
     const tabs=document.querySelector('.tabs');
