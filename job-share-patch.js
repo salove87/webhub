@@ -13,3 +13,4 @@ ready.then(()=>{decorateCards();const box=$('#jobsGrid');if(box)new MutationObse
 function enhance(){const detail=$('#jobDetail');if(!detail)return;const apply=$('#applyBtn');if(!apply||$('#shareJobBtn'))return;const dialog=$('#jobDialog');const id=dialog?.dataset?.jobId||apply.dataset.jobId;if(!id)return;const title=detail.querySelector('h2')?.textContent?.trim()||'ตำแหน่งงาน';const b=document.createElement('button');b.type='button';b.id='shareJobBtn';b.className='btn ghost wide';b.style.marginTop='8px';b.textContent='แชร์งานนี้';b.onclick=()=>shareJob(id,title);apply.insertAdjacentElement('afterend',b)}
 const detail=$('#jobDetail');if(detail)new MutationObserver(enhance).observe(detail,{childList:true,subtree:true});
 window.WebHubJobShare={urlFor,shareJob};
+import('./saved-jobs-patch.js?v=20260906-1');
