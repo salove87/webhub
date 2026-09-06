@@ -33,6 +33,7 @@ jobs:
         run: |
           node scripts/generate-static-jobs.mjs
           node scripts/english-job-slugs.mjs
+          node scripts/inject-ga4-static.mjs jobs
       - name: Commit generated pages
         run: |
           git add -A jobs jobs-static.json
