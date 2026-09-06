@@ -1,6 +1,9 @@
 import{getApp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import{getFirestore,collection,getDocs,query,where}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
+// Load the same AdSense Auto Ads account used by prerendered article pages.
+if(!document.querySelector('script[src*="pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]')){const ad=document.createElement('script');ad.async=true;ad.crossOrigin='anonymous';ad.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3455272174981579';document.head.appendChild(ad)}
+
 const app=getApp(),db=getFirestore(app);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const icons={'คู่มือสมัครงาน':'🧭','Jobs Update':'💼','HR':'👥','Resume':'📄','เงินเดือน':'💰','สิทธิแรงงาน':'⚖️','Career':'🚀','ตลาดงาน':'📈','เทคนิคสัมภาษณ์':'💬'};
