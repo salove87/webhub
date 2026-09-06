@@ -1,63 +1,24 @@
 (()=>{
 if(document.querySelector('#webhubAnnouncement'))return;
-const KEY='webhub-announcement-seen-20260906';
+const KEY='webhub-announcement-seen-20260906-visual';
 try{if(sessionStorage.getItem(KEY)==='1')return}catch{}
-const style=document.createElement('style');
-style.textContent=`
-#webhubAnnouncement{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:22px;background:rgba(2,6,23,.72);backdrop-filter:blur(10px)}
-#webhubAnnouncement .wh-ann-card{width:min(940px,100%);max-height:min(90vh,860px);overflow:auto;background:linear-gradient(145deg,#fff 0%,#f8fbff 62%,#eff8ff 100%);border:1px solid rgba(125,211,252,.65);border-radius:30px;box-shadow:0 35px 110px rgba(2,6,23,.38);padding:38px;position:relative}
-#webhubAnnouncement .wh-ann-kicker{display:inline-flex;align-items:center;gap:8px;padding:7px 13px;border-radius:999px;background:#e0f2fe;color:#0369a1;font-size:13px;font-weight:800;margin-bottom:14px}
-#webhubAnnouncement h2{font-size:clamp(34px,6vw,64px);line-height:1.08;letter-spacing:-.035em;margin:0;color:#082f49}
-#webhubAnnouncement h2 span{color:#0284c7}
-#webhubAnnouncement .wh-ann-lead{font-size:clamp(17px,2.2vw,22px);line-height:1.75;color:#475569;margin:18px 0 22px;max-width:820px}
-#webhubAnnouncement .wh-ann-highlight{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0}
-#webhubAnnouncement .wh-ann-highlight>div{background:#fff;border:1px solid #dbe5ee;border-radius:18px;padding:18px}
-#webhubAnnouncement .wh-ann-highlight b{display:block;color:#075985;font-size:20px;margin-bottom:4px}
-#webhubAnnouncement .wh-ann-highlight span{color:#64748b;font-size:13px;line-height:1.6}
-#webhubAnnouncement .wh-ann-points{display:grid;grid-template-columns:1fr 1fr;gap:10px 22px;padding:18px 20px;margin:18px 0;background:#082f49;color:#fff;border-radius:20px}
-#webhubAnnouncement .wh-ann-points div{display:flex;gap:9px;align-items:flex-start;line-height:1.55;font-size:14px}
-#webhubAnnouncement .wh-ann-points i{font-style:normal;color:#38bdf8;font-weight:900}
-#webhubAnnouncement .wh-ann-goal{margin:18px 0;padding:16px 18px;border-left:4px solid #0ea5e9;background:#f0f9ff;border-radius:0 14px 14px 0;color:#0f172a;font-weight:700;line-height:1.7}
-#webhubAnnouncement .wh-ann-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
-#webhubAnnouncement .wh-ann-actions button{border:0;border-radius:13px;min-height:48px;padding:0 20px;font:inherit;font-weight:800;cursor:pointer}
-#webhubAnnouncement .wh-ann-post{background:#0284c7;color:#fff}
-#webhubAnnouncement .wh-ann-jobs{background:#fff;color:#075985;border:1px solid #bae6fd!important}
-#webhubAnnouncement .wh-ann-close{width:100%;margin-top:18px;background:#0f172a;color:#fff}
-#webhubAnnouncement .wh-ann-note{text-align:center;color:#64748b;font-size:12px;margin-top:10px}
-@media(max-width:700px){#webhubAnnouncement{padding:12px;align-items:flex-end}#webhubAnnouncement .wh-ann-card{padding:24px 18px 18px;border-radius:24px 24px 16px 16px;max-height:94vh}#webhubAnnouncement .wh-ann-highlight{grid-template-columns:1fr}#webhubAnnouncement .wh-ann-points{grid-template-columns:1fr}#webhubAnnouncement .wh-ann-actions{display:grid;grid-template-columns:1fr 1fr}#webhubAnnouncement .wh-ann-actions button{padding:0 12px}}
-`;
-document.head.appendChild(style);
-const overlay=document.createElement('div');
-overlay.id='webhubAnnouncement';
-overlay.setAttribute('role','dialog');
-overlay.setAttribute('aria-modal','true');
-overlay.setAttribute('aria-labelledby','webhubAnnouncementTitle');
-overlay.innerHTML=`<section class="wh-ann-card">
-  <div class="wh-ann-kicker">🚀 ประกาศจาก WebHub Jobs</div>
-  <h2 id="webhubAnnouncementTitle">โอกาสใหม่ของการหางานและหาคน<br><span>เริ่มต้นที่นี่ ฟรี 100%</span></h2>
-  <p class="wh-ann-lead">WebHub Jobs เปิดพื้นที่ให้ผู้หางานและนายจ้างทั่วประเทศไทยเชื่อมต่อกันได้ง่ายขึ้น โปร่งใสขึ้น และเข้าถึงโอกาสได้มากขึ้น โดยผู้หางานใช้งานฟรี และนายจ้างสามารถลงประกาศรับสมัครงานได้ฟรี ไม่มีค่าลงประกาศ</p>
-  <div class="wh-ann-highlight">
-    <div><b>ลงประกาศฟรี</b><span>นายจ้างสร้างประกาศงานและส่งให้ทีมงานตรวจสอบก่อนเผยแพร่ได้โดยไม่เสียค่าใช้จ่าย</span></div>
-    <div><b>สมัครงานฟรี</b><span>ผู้หางานค้นหา บันทึกตำแหน่ง สมัครงาน และติดตามโอกาสใหม่ได้โดยไม่มีค่าธรรมเนียม</span></div>
-    <div><b>เชื่อมคนกับงาน</b><span>รวมตำแหน่งงานจากหลากหลายสายอาชีพ บริษัท และพื้นที่ทั่วประเทศไทยไว้ในจุดเดียว</span></div>
-  </div>
-  <div class="wh-ann-points">
-    <div><i>✓</i><span>ประกาศงานผ่านขั้นตอนตรวจสอบก่อนแสดงสู่สาธารณะ</span></div>
-    <div><i>✓</i><span>มีพื้นที่แยกชัดเจนสำหรับผู้หางานและนายจ้าง</span></div>
-    <div><i>✓</i><span>รองรับการค้นหางานตามตำแหน่ง สายงาน รูปแบบงาน และจังหวัด</span></div>
-    <div><i>✓</i><span>มีระบบบันทึกงาน สมัครงาน และจัดการผู้สมัครภายในแพลตฟอร์ม</span></div>
-    <div><i>✓</i><span>เปิดโอกาสให้บริษัททุกขนาดเข้าถึงผู้สมัครได้ง่ายขึ้น</span></div>
-    <div><i>✓</i><span>เน้นความปลอดภัย โปร่งใส และไม่เรียกเก็บเงินจากผู้สมัคร</span></div>
-  </div>
-  <div class="wh-ann-goal">เป้าหมายของ WebHub Jobs คือการเติบโตเป็นศูนย์รวมโอกาสการทำงานที่ดีที่สุดแห่งหนึ่งของประเทศไทย — พื้นที่ที่คนหางานเจองานที่ใช่ และนายจ้างเจอคนที่พร้อมเติบโตไปด้วยกัน</div>
-  <div class="wh-ann-actions"><button class="wh-ann-post" type="button" id="whAnnPost">ลงประกาศงานฟรี</button><button class="wh-ann-jobs" type="button" id="whAnnJobs">ค้นหางานตอนนี้</button></div>
-  <button class="wh-ann-close" type="button" id="whAnnClose">ปิดประกาศ และเข้าสู่เว็บไซต์</button>
-  <div class="wh-ann-note">WebHub Jobs — งานที่ใช่ คนที่พร้อม</div>
-</section>`;
-document.body.appendChild(overlay);
-const close=()=>{try{sessionStorage.setItem(KEY,'1')}catch{}overlay.remove();style.remove()};
-overlay.querySelector('#whAnnClose').onclick=close;
-overlay.querySelector('#whAnnJobs').onclick=()=>{close();location.hash='jobs';setTimeout(()=>document.querySelector('#jobs')?.scrollIntoView({behavior:'smooth',block:'start'}),40)};
-overlay.querySelector('#whAnnPost').onclick=()=>{close();setTimeout(()=>document.querySelector('[data-post-job]')?.click(),30)};
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.querySelector('#webhubAnnouncement'))close()},{once:true});
+const style=document.createElement('style');style.textContent=`
+#webhubAnnouncement{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:18px;background:rgba(2,6,23,.72);backdrop-filter:blur(7px);font-family:"Noto Sans Thai",Arial,sans-serif}
+#webhubAnnouncement *{box-sizing:border-box}#webhubAnnouncement .wh-card{width:min(1180px,96vw);max-height:94vh;overflow:auto;position:relative;border-radius:26px;background:linear-gradient(125deg,#f8fcff 0%,#e0f2fe 48%,#fff7ed 100%);box-shadow:0 30px 100px rgba(0,0,0,.38);border:1px solid rgba(255,255,255,.75)}
+#webhubAnnouncement .wh-x{position:absolute;right:16px;top:16px;z-index:5;width:44px;height:44px;border-radius:50%;border:2px solid #fff;background:#0f172a;color:#fff;font-size:27px;line-height:1;cursor:pointer;box-shadow:0 5px 20px #0004}
+#webhubAnnouncement .wh-hero{min-height:420px;padding:44px 48px 34px;display:grid;grid-template-columns:1.15fr .85fr;gap:28px;align-items:center;overflow:hidden;position:relative}
+#webhubAnnouncement .wh-hero:after{content:"";position:absolute;width:520px;height:520px;border-radius:50%;right:-110px;top:-180px;background:linear-gradient(145deg,#38bdf8,#2563eb);opacity:.15}
+#webhubAnnouncement .wh-brand{font-size:clamp(26px,3vw,42px);font-weight:900;color:#075985;letter-spacing:-1px}.wh-brand span{color:#f97316}
+#webhubAnnouncement h2{font-size:clamp(39px,5.3vw,72px);line-height:1.06;letter-spacing:-2px;margin:14px 0 12px;color:#082f49;font-weight:900}#webhubAnnouncement h2 em{font-style:normal;color:#f97316}
+#webhubAnnouncement .wh-sub{display:inline-block;background:#075985;color:#fff;border-radius:12px;padding:10px 18px;font-size:clamp(17px,2vw,25px);font-weight:800}.wh-sub strong{color:#fde047}
+#webhubAnnouncement .wh-people{position:relative;z-index:1;display:flex;justify-content:center;align-items:flex-end;min-height:330px}
+#webhubAnnouncement .wh-person{width:190px;height:280px;border-radius:95px 95px 25px 25px;background:linear-gradient(#f8d4bd 0 31%,#0f4c81 31% 100%);position:relative;box-shadow:0 20px 45px #07598533}.wh-person:before{content:"";position:absolute;left:49px;top:34px;width:92px;height:92px;border-radius:50%;background:#f0bfa1;box-shadow:0 -24px 0 -6px #241c1b}.wh-person:after{content:"";position:absolute;left:78px;top:128px;width:34px;height:65px;background:#fff;clip-path:polygon(0 0,100% 0,72% 100%,50% 80%,28% 100%)}
+#webhubAnnouncement .wh-person.two{margin-left:-28px;height:310px;background:linear-gradient(#f4ccb1 0 30%,#172554 30% 100%);transform:translateY(-8px)}.wh-person.two:before{box-shadow:0 -24px 0 -6px #111827}
+#webhubAnnouncement .wh-laptop{position:absolute;right:0;bottom:5px;width:260px;height:155px;background:#fff;border:9px solid #1e293b;border-radius:12px;box-shadow:0 12px 30px #0003;padding:16px;color:#075985;font-weight:900;transform:rotate(2deg)}.wh-laptop small{display:block;color:#64748b;margin-top:8px;line-height:1.7}.wh-laptop i{display:block;height:9px;border-radius:8px;background:#e0f2fe;margin:8px 0}.wh-laptop i:nth-of-type(2){width:70%}.wh-laptop i:nth-of-type(3){width:82%}
+#webhubAnnouncement .wh-benefits{background:#fff;margin:0 32px 26px;border-radius:20px;padding:18px;display:grid;grid-template-columns:repeat(4,1fr);box-shadow:0 12px 35px #07598517;position:relative;z-index:2}.wh-benefit{padding:8px 18px;border-right:1px solid #e2e8f0;display:flex;gap:11px;align-items:center}.wh-benefit:last-child{border:0}.wh-ico{width:46px;height:46px;flex:0 0 46px;border-radius:50%;display:grid;place-items:center;background:#e0f2fe;font-size:23px}.wh-benefit b{display:block;color:#0f3d66;font-size:16px}.wh-benefit span{font-size:12px;color:#64748b}.wh-benefit strong{color:#f97316}
+#webhubAnnouncement .wh-bottom{background:#063b6f;padding:22px 32px 24px;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}.wh-bottom button{min-height:54px;border-radius:999px;padding:0 30px;font:inherit;font-size:17px;font-weight:900;cursor:pointer}.wh-jobs{background:#f97316;color:#fff;border:0}.wh-post{background:#fff;color:#075985;border:2px solid #bae6fd}.wh-close{background:#334155;color:#fff;border:1px solid #64748b}.wh-note{width:100%;text-align:center;color:#bfdbfe;font-size:12px;margin-top:3px}
+@media(max-width:760px){#webhubAnnouncement{padding:8px;align-items:end}.wh-card{border-radius:22px!important}.wh-hero{grid-template-columns:1fr!important;min-height:auto!important;padding:28px 20px 18px!important}.wh-people{min-height:190px!important;transform:scale(.72);margin:-35px 0 -45px}.wh-benefits{grid-template-columns:1fr 1fr!important;margin:0 12px 14px!important;padding:10px!important}.wh-benefit{border-right:0!important;border-bottom:1px solid #e2e8f0;padding:10px!important}.wh-benefit:nth-last-child(-n+2){border-bottom:0!important}.wh-bottom{padding:16px 12px!important;display:grid!important;grid-template-columns:1fr 1fr!important}.wh-bottom button{padding:0 10px!important;font-size:14px!important}.wh-close{grid-column:1/-1}.wh-x{width:40px!important;height:40px!important;right:10px!important;top:10px!important}#webhubAnnouncement h2{letter-spacing:-1px!important}}
+`;document.head.appendChild(style);
+const o=document.createElement('div');o.id='webhubAnnouncement';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.innerHTML=`<section class="wh-card"><button class="wh-x" id="whX" aria-label="ปิด">×</button><div class="wh-hero"><div><div class="wh-brand">💼 WebHub<span>-Job</span></div><h2>ศูนย์รวมคนหางาน<br><em>ทั่วประเทศไทย</em></h2><div class="wh-sub">หางานง่าย · สมัครฟรี · ลงประกาศงาน <strong>ฟรี 100%</strong></div></div><div class="wh-people" aria-hidden="true"><div class="wh-person"></div><div class="wh-person two"></div><div class="wh-laptop">💼 WebHub-Job<small>งานใหม่รอคุณอยู่</small><i></i><i></i><i></i></div></div></div><div class="wh-benefits"><div class="wh-benefit"><div class="wh-ico">🔎</div><div><b>ค้นหางานทั่วไทย</b><span>หลากหลายสายอาชีพ</span></div></div><div class="wh-benefit"><div class="wh-ico">📣</div><div><b>ลงประกาศ <strong>ฟรี 100%</strong></b><span>ไม่มีค่าลงประกาศ</span></div></div><div class="wh-benefit"><div class="wh-ico">🛡️</div><div><b>ตรวจสอบประกาศ</b><span>เพิ่มความมั่นใจให้ผู้สมัคร</span></div></div><div class="wh-benefit"><div class="wh-ico">🤝</div><div><b>เชื่อมคนกับงาน</b><span>สร้างโอกาสที่ดีกว่า</span></div></div></div><div class="wh-bottom"><button class="wh-jobs" id="whJobs">🔎 ค้นหางานเลย</button><button class="wh-post" id="whPost">＋ ลงประกาศงานฟรี</button><button class="wh-close" id="whClose">ปิดประกาศ และเข้าสู่เว็บไซต์</button><div class="wh-note">WebHub-Job — ทุกโอกาส เริ่มได้จากที่นี่</div></div></section>`;document.body.appendChild(o);
+const close=()=>{try{sessionStorage.setItem(KEY,'1')}catch{}o.remove();style.remove()};o.querySelector('#whX').onclick=close;o.querySelector('#whClose').onclick=close;o.querySelector('#whJobs').onclick=()=>{close();location.hash='jobs';setTimeout(()=>document.querySelector('#jobs')?.scrollIntoView({behavior:'smooth',block:'start'}),40)};o.querySelector('#whPost').onclick=()=>{close();setTimeout(()=>document.querySelector('[data-post-job]')?.click(),30)};document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.querySelector('#webhubAnnouncement'))close()},{once:true});
 })();
