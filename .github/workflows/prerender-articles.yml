@@ -33,6 +33,7 @@ jobs:
       - name: Generate static articles
         run: |
           node scripts/generate-static-articles.mjs
+          node scripts/normalize-static-article-seo.mjs
           node scripts/inject-ga4-static.mjs articles
           node scripts/generate-sitemap.mjs
       - name: Validate generated article output
