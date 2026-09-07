@@ -51,4 +51,4 @@ const schema={
 };
 let ld=head.querySelector('#webhubSeoSchema');if(!ld){ld=document.createElement('script');ld.type='application/ld+json';ld.id='webhubSeoSchema';head.appendChild(ld)}ld.textContent=JSON.stringify(schema);
 
-import('./resume-application-patch.js?v=20260907-1');
+import('./resume-application-patch.js?v=20260907-2');
