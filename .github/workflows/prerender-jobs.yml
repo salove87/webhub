@@ -7,6 +7,7 @@ on:
     paths-ignore:
       - 'jobs/**'
       - 'jobs-static.json'
+      - 'sitemap.xml'
   schedule:
     - cron: '*/5 * * * *'
 
@@ -35,9 +36,10 @@ jobs:
           node scripts/english-job-slugs.mjs
           node scripts/inject-ga4-static.mjs jobs
           node scripts/enhance-static-job-share.mjs
+          node scripts/generate-sitemap.mjs
       - name: Commit generated pages
         run: |
-          git add -A jobs jobs-static.json
+          git add -A jobs jobs-static.json sitemap.xml
           if git diff --cached --quiet; then
             echo "No changes"
             exit 0
