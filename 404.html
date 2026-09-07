@@ -9,7 +9,12 @@
     (function(){
       const rawPath = decodeURIComponent(location.pathname || '/');
       const cleanedPath = rawPath.replace(/[\u200B-\u200D\u2060\uFEFF]/g,'').replace(/\s+$/g,'');
-      if (cleanedPath === '/index.html' || cleanedPath === '/index.htm' || cleanedPath === '/') {
+      const normalized = cleanedPath.replace(/\/+$/,'') || '/';
+      const legacyHome = new Set([
+        '/index.html','/index.htm',
+        '/webhub-job-portal','/webhub-job-portal.html'
+      ]);
+      if (legacyHome.has(normalized) || normalized === '/') {
         location.replace('/' + location.search + location.hash);
         return;
       }
@@ -24,7 +29,7 @@
 <body>
   <main class="box">
     <h1>ไม่พบหน้าที่ต้องการ</h1>
-    <p>ลิงก์อาจมีอักขระแฝงหรือถูกคัดลอกมาไม่ครบ</p>
+    <p>ลิงก์อาจเป็นลิงก์เก่าหรือถูกคัดลอกมาไม่ครบ</p>
     <a href="/">กลับหน้าแรก WebHub Jobs</a>
   </main>
 </body>
