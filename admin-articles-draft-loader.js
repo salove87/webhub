@@ -1,1 +1,1 @@
-import './github-draft-loader.js?v=20260906-2';
+import './github-draft-loader.js?v=20260907-1';
