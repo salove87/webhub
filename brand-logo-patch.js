@@ -1,5 +1,5 @@
 (()=>{
-  const HEADER_LOGO='assets/brand/webhub-jobs-logo-new.png?v=20260906-1';
+  const HEADER_LOGO='assets/brand/webhub-jobs-logo-transparent.png?v=20260907-1';
   const FAVICON='assets/brand/webhub-jobs-favicon-192.png';
 
   function applyBrandLogo(){
