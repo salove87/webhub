@@ -4,16 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex">
-  <title>กำลังพากลับหน้าแรก | WebHub Jobs</title>
+  <title>กำลังเปิดหน้า | WebHub Jobs</title>
   <script>
     (function(){
       const rawPath = decodeURIComponent(location.pathname || '/');
       const cleanedPath = rawPath.replace(/[\u200B-\u200D\u2060\uFEFF]/g,'').replace(/\s+$/g,'');
       const normalized = cleanedPath.replace(/\/+$/,'') || '/';
-      const legacyHome = new Set([
-        '/index.html','/index.htm',
-        '/webhub-job-portal','/webhub-job-portal.html'
-      ]);
+      const articleMatch = normalized.match(/^\/articles\/([a-z0-9][a-z0-9-]*)$/i);
+      if(articleMatch){
+        const slug=articleMatch[1];
+        location.replace('/article.html?slug='+encodeURIComponent(slug)+'&pretty=1');
+        return;
+      }
+      const legacyHome = new Set(['/index.html','/index.htm','/webhub-job-portal','/webhub-job-portal.html']);
       if (legacyHome.has(normalized) || normalized === '/') {
         location.replace('/' + location.search + location.hash);
         return;
@@ -28,8 +31,8 @@
 </head>
 <body>
   <main class="box">
-    <h1>ไม่พบหน้าที่ต้องการ</h1>
-    <p>ลิงก์อาจเป็นลิงก์เก่าหรือถูกคัดลอกมาไม่ครบ</p>
+    <h1>กำลังเปิดหน้าที่ต้องการ</h1>
+    <p>หากหน้านี้ไม่เปลี่ยนอัตโนมัติ ลิงก์อาจไม่ถูกต้องหรือยังไม่มีข้อมูล</p>
     <a href="/">กลับหน้าแรก WebHub Jobs</a>
   </main>
 </body>
