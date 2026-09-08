@@ -2,13 +2,17 @@ export const firebaseConfig={apiKey:"AIzaSyDZSY0jxEGzTG0rualNAgH_Ly45Ve_b3SY",au
 
 // Homepage compatibility: app.js still binds a legacy #showLogin hook.
 // Keep the hook hidden so a missing legacy button cannot stop job loading.
-if((location.pathname==='/'||location.pathname.endsWith('/index.html'))&&!document.getElementById('showLogin')){
+const isHomepage=location.pathname==='/'||location.pathname.endsWith('/index.html');
+if(isHomepage&&!document.getElementById('showLogin')){
   const legacyLoginHook=document.createElement('button');
   legacyLoginHook.id='showLogin';
   legacyLoginHook.type='button';
   legacyLoginHook.hidden=true;
   legacyLoginHook.setAttribute('aria-hidden','true');
   document.body.appendChild(legacyLoginHook);
+}
+if(isHomepage){
+  setTimeout(()=>{import('./auth-modern-patch.js?v=20260908-1');},0);
 }
 
 // Google Analytics 4 — public pages only. Admin traffic is intentionally excluded.
