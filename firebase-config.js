@@ -12,7 +12,7 @@ if(isHomepage&&!document.getElementById('showLogin')){
   document.body.appendChild(legacyLoginHook);
 }
 if(isHomepage){
-  setTimeout(()=>{import('./auth-modern-patch.js?v=20260908-1');},0);
+  setTimeout(()=>{import('./auth-modern-patch.js?v=20260908-2');},0);
 }
 
 // Google Analytics 4 — public pages only. Admin traffic is intentionally excluded.
