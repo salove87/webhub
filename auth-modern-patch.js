@@ -1,95 +1,27 @@
 import{getApp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import{getAuth,GoogleAuthProvider,signInWithPopup,signOut,setPersistence,browserLocalPersistence,browserSessionPersistence}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import{getFirestore,doc,getDoc,setDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-
 const app=getApp(),auth=getAuth(app),db=getFirestore(app),$=s=>document.querySelector(s);
-const css=document.createElement('style');
-css.textContent=`
-#authDialog.webhub-auth{width:min(610px,calc(100% - 28px));max-width:610px;border:0;border-radius:22px;padding:0;overflow:hidden;background:#fff;box-shadow:0 28px 80px rgba(2,18,38,.35)}
+const css=document.createElement('style');css.textContent=`
+#authDialog.webhub-auth{width:min(570px,calc(100% - 28px));max-width:570px;max-height:min(92vh,820px);border:0;border-radius:22px;padding:0;overflow:auto;background:#fff;box-shadow:0 28px 80px rgba(2,18,38,.35)}
 #authDialog.webhub-auth::backdrop{background:rgba(15,23,42,.68);backdrop-filter:blur(3px)}
-#authDialog.webhub-auth .auth-shell{padding:28px 38px 30px;background:linear-gradient(155deg,#fff 0%,#fff 72%,#f5faff 100%)}
-#authDialog.webhub-auth .auth-brand{display:flex;align-items:center;justify-content:center;margin:0 42px 22px}
-#authDialog.webhub-auth .auth-brand img{display:block;max-width:220px;max-height:62px;object-fit:contain}
-#authDialog.webhub-auth .close{top:18px;right:20px;width:34px;height:34px;border:0;background:transparent;font-size:27px;color:#0f172a;cursor:pointer}
-#authDialog.webhub-auth #authChoice{padding:4px 0 8px}
-#authDialog.webhub-auth #authChoice h2,#authDialog.webhub-auth #authForm h2{margin:0 0 7px;font-size:29px;line-height:1.3;color:#0f172a}
-#authDialog.webhub-auth #authChoice>p,#authDialog.webhub-auth #authForm>#authRole{margin:0 0 20px;color:#64748b;line-height:1.65}
-#authDialog.webhub-auth .role-grid{gap:12px}
-#authDialog.webhub-auth .role-grid button{border:1px solid #dbe5ee;border-radius:15px;background:#fff;padding:17px;text-align:left;transition:.18s;box-shadow:0 5px 18px rgba(15,23,42,.04)}
-#authDialog.webhub-auth .role-grid button:hover{border-color:#38a7e2;transform:translateY(-1px);box-shadow:0 8px 22px rgba(14,165,233,.12)}
-#authDialog.webhub-auth .back-link{border:0;background:transparent;color:#64748b;padding:0;margin:0 0 17px;font-weight:700;cursor:pointer}
-#authDialog.webhub-auth #authForm label:not(.check){display:block;margin:0 0 14px;font-size:13px;font-weight:700;color:#334155}
-#authDialog.webhub-auth #authForm input[type="email"],#authDialog.webhub-auth #authForm input[type="password"],#authDialog.webhub-auth #authForm input[type="text"]{width:100%;height:54px;margin-top:7px;border:1px solid #d7e1eb;border-radius:12px;padding:0 15px;background:#fff;font:inherit;outline:none;transition:.15s}
-#authDialog.webhub-auth #authForm input:focus{border-color:#1597d4;box-shadow:0 0 0 3px rgba(14,165,233,.12)}
-#authDialog.webhub-auth .auth-options{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 0 16px}
-#authDialog.webhub-auth .auth-remember{display:flex;align-items:center;gap:8px;font-size:14px;color:#475569;cursor:pointer}
-#authDialog.webhub-auth .auth-remember input{width:18px;height:18px;accent-color:#078bd0}
-#authDialog.webhub-auth #forgotPasswordBtn{border:0;background:transparent;color:#0284c7;font-weight:700;padding:5px 0;cursor:pointer}
-#authDialog.webhub-auth #authSubmit{width:100%;height:54px;border:0;border-radius:12px;background:linear-gradient(90deg,#078fd2,#1565e8);color:#fff;font-size:16px;font-weight:800;box-shadow:0 9px 24px rgba(14,120,220,.22)}
-#authDialog.webhub-auth #authSubmit:hover{filter:brightness(.98)}
-#authDialog.webhub-auth .auth-divider{display:flex;align-items:center;gap:12px;margin:20px 0 15px;color:#94a3b8;font-size:13px}
-#authDialog.webhub-auth .auth-divider:before,#authDialog.webhub-auth .auth-divider:after{content:"";height:1px;background:#dbe5ee;flex:1}
-#authDialog.webhub-auth .google-login{width:100%;height:52px;border:1px solid #d7e1eb;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;gap:10px;font-size:15px;font-weight:800;color:#334155;cursor:pointer;box-shadow:0 4px 14px rgba(15,23,42,.05)}
-#authDialog.webhub-auth .google-login:hover{background:#f8fafc;border-color:#b8c7d6}
-#authDialog.webhub-auth .google-g{font-size:21px;font-weight:900;color:#4285f4;font-family:Arial,sans-serif}
-#authDialog.webhub-auth #toggleAuth{display:block;width:100%;margin:17px 0 0;border:0;background:transparent;color:#0284c7;font-weight:700;cursor:pointer;text-align:center}
-#authDialog.webhub-auth #authError{margin:8px 0 12px;color:#dc2626;font-size:13px;line-height:1.45}
-@media(max-width:620px){#authDialog.webhub-auth .auth-shell{padding:24px 20px 26px}#authDialog.webhub-auth .auth-brand{margin-bottom:18px}#authDialog.webhub-auth #authChoice h2,#authDialog.webhub-auth #authForm h2{font-size:24px}#authDialog.webhub-auth .auth-options{align-items:flex-start;flex-direction:column;gap:4px}}
+#authDialog.webhub-auth .auth-shell{padding:24px 34px 28px;background:linear-gradient(155deg,#fff 0%,#fff 76%,#f5faff 100%)}
+#authDialog.webhub-auth .auth-brand{display:flex;align-items:center;justify-content:center;margin:0 40px 17px}#authDialog.webhub-auth .auth-brand img{display:block;max-width:190px;max-height:52px;object-fit:contain}
+#authDialog.webhub-auth .close{top:15px;right:17px;width:34px;height:34px;border:0;background:transparent;font-size:27px;color:#0f172a;cursor:pointer}
+#authDialog.webhub-auth #authChoice{padding:3px 0 7px}#authDialog.webhub-auth #authChoice h2,#authDialog.webhub-auth #authForm h2{margin:0 0 5px;font-size:27px;line-height:1.3;color:#0f172a}#authDialog.webhub-auth #authChoice>p,#authDialog.webhub-auth #authForm>#authRole{margin:0 0 16px;color:#64748b;line-height:1.55}
+#authDialog.webhub-auth .role-grid{gap:12px}#authDialog.webhub-auth .role-grid button{border:1px solid #dbe5ee;border-radius:15px;background:#fff;padding:17px;text-align:left;transition:.18s;box-shadow:0 5px 18px rgba(15,23,42,.04)}#authDialog.webhub-auth .role-grid button:hover{border-color:#38a7e2;transform:translateY(-1px);box-shadow:0 8px 22px rgba(14,165,233,.12)}
+#authDialog.webhub-auth .back-link{border:0;background:transparent;color:#64748b;padding:0;margin:0 0 13px;font-weight:700;cursor:pointer}
+#authDialog.webhub-auth #authForm label:not(.check):not(.auth-remember){display:block;margin:0 0 11px;font-size:13px;font-weight:700;color:#334155}
+#authDialog.webhub-auth #authForm input[type=email],#authDialog.webhub-auth #authForm input[type=password],#authDialog.webhub-auth #authForm input[type=text]{width:100%;height:50px;margin-top:5px;border:1px solid #d7e1eb;border-radius:12px;padding:0 14px;background:#fff;font:inherit;outline:none;transition:.15s}#authDialog.webhub-auth #authForm input:focus{border-color:#1597d4;box-shadow:0 0 0 3px rgba(14,165,233,.12)}
+#authDialog.webhub-auth #consentRow{display:flex!important;align-items:flex-start!important;gap:9px!important;margin:8px 0 10px!important;color:#475569;font-size:13px;font-weight:600;line-height:1.5}#authDialog.webhub-auth #consentRow.hidden{display:none!important}#authDialog.webhub-auth #consentRow input{appearance:auto!important;-webkit-appearance:checkbox!important;width:17px!important;height:17px!important;min-width:17px!important;min-height:17px!important;margin:2px 0 0!important;padding:0!important;accent-color:#078bd0}#authDialog.webhub-auth #consentRow span{flex:1;min-width:0}
+#authDialog.webhub-auth .auth-options{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:7px 0 13px;min-height:28px}#authDialog.webhub-auth .auth-remember{display:inline-flex!important;align-items:center!important;gap:8px!important;margin:0!important;font-size:13px!important;font-weight:600!important;color:#475569!important;line-height:1.4;cursor:pointer;white-space:nowrap}#authDialog.webhub-auth .auth-remember input{appearance:auto!important;-webkit-appearance:checkbox!important;width:17px!important;height:17px!important;min-width:17px!important;min-height:17px!important;margin:0!important;padding:0!important;accent-color:#078bd0}#authDialog.webhub-auth #forgotPasswordBtn{border:0;background:transparent;color:#0284c7;font-weight:700;padding:4px 0;margin:0!important;cursor:pointer;white-space:nowrap}
+#authDialog.webhub-auth #authSubmit{width:100%;height:52px;border:0;border-radius:12px;background:linear-gradient(90deg,#078fd2,#1565e8);color:#fff;font-size:16px;font-weight:800;box-shadow:0 9px 24px rgba(14,120,220,.22)}#authDialog.webhub-auth #authSubmit:hover{filter:brightness(.98)}
+#authDialog.webhub-auth .auth-divider{display:flex;align-items:center;gap:12px;margin:16px 0 12px;color:#94a3b8;font-size:13px}#authDialog.webhub-auth .auth-divider:before,#authDialog.webhub-auth .auth-divider:after{content:"";height:1px;background:#dbe5ee;flex:1}
+#authDialog.webhub-auth .google-login{width:100%;height:50px;border:1px solid #d7e1eb;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;gap:10px;font-size:14px;font-weight:800;color:#334155;cursor:pointer;box-shadow:0 4px 14px rgba(15,23,42,.05)}#authDialog.webhub-auth .google-login:hover{background:#f8fafc;border-color:#b8c7d6}#authDialog.webhub-auth .google-g{font-size:20px;font-weight:900;color:#4285f4;font-family:Arial,sans-serif}#authDialog.webhub-auth #toggleAuth{display:block;width:100%;margin:14px 0 0;border:0;background:transparent;color:#0284c7;font-weight:700;cursor:pointer;text-align:center}#authDialog.webhub-auth #authError{margin:6px 0 9px;color:#dc2626;font-size:13px;line-height:1.45}
+@media(max-width:620px){#authDialog.webhub-auth{width:calc(100% - 20px);max-height:94vh;border-radius:19px}#authDialog.webhub-auth .auth-shell{padding:20px 18px 23px}#authDialog.webhub-auth .auth-brand{margin:0 38px 14px}#authDialog.webhub-auth .auth-brand img{max-width:165px;max-height:46px}#authDialog.webhub-auth #authChoice h2,#authDialog.webhub-auth #authForm h2{font-size:23px}#authDialog.webhub-auth #authForm label:not(.check):not(.auth-remember){margin-bottom:9px}#authDialog.webhub-auth #authForm input[type=email],#authDialog.webhub-auth #authForm input[type=password],#authDialog.webhub-auth #authForm input[type=text]{height:48px}#authDialog.webhub-auth .auth-options{flex-direction:row!important;align-items:center!important;justify-content:space-between!important;gap:10px;margin:6px 0 11px}#authDialog.webhub-auth .auth-remember,#authDialog.webhub-auth #forgotPasswordBtn{font-size:12px!important}#authDialog.webhub-auth #consentRow{font-size:12px;margin:6px 0 9px!important}#authDialog.webhub-auth #authSubmit{height:50px}}
 `;
 document.head.appendChild(css);
-
-function toast(m){const e=$('#toast');if(!e)return;e.textContent=m;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),3200)}
-function roleLabel(role){return role==='employer'?'นายจ้าง':'ผู้หางาน'}
-function syncCopy(){const role=$('#authRole')?.value||'candidate',mode=$('#authMode')?.value||'login',title=$('#authTitle'),google=$('#googleLoginBtn');if(title&&mode==='login')title.textContent=`เข้าสู่ระบบ${roleLabel(role)}`;if(google)google.querySelector('.google-text').textContent=`เข้าสู่ระบบด้วย Google`}
-
-function install(){
-  const dialog=$('#authDialog'),form=$('#authForm');if(!dialog||!form||dialog.dataset.modernAuth==='1')return false;
-  dialog.dataset.modernAuth='1';dialog.classList.add('webhub-auth');
-  const shell=document.createElement('div');shell.className='auth-shell';
-  const kids=[...dialog.childNodes];kids.forEach(n=>shell.appendChild(n));dialog.appendChild(shell);
-  const brand=document.createElement('div');brand.className='auth-brand';brand.innerHTML='<img src="assets/brand/webhub-jobs-logo-transparent.png" alt="WebHub Jobs">';
-  const close=shell.querySelector('.close');shell.insertBefore(brand,close?.nextSibling||shell.firstChild);
-
-  let opts=$('#authOptions');if(!opts){opts=document.createElement('div');opts.id='authOptions';opts.className='auth-options';opts.innerHTML='<label class="auth-remember"><input type="checkbox" id="rememberLogin" checked><span>จดจำฉันไว้</span></label>';
-    const forgot=$('#forgotPasswordBtn'),submit=$('#authSubmit');if(submit)form.insertBefore(opts,submit);if(forgot)opts.appendChild(forgot);
-  }
-  if(!$('#googleLoginBtn')){
-    const divider=document.createElement('div');divider.className='auth-divider';divider.textContent='หรือ';
-    const gb=document.createElement('button');gb.type='button';gb.id='googleLoginBtn';gb.className='google-login';gb.innerHTML='<span class="google-g">G</span><span class="google-text">เข้าสู่ระบบด้วย Google</span>';
-    const toggle=$('#toggleAuth');form.insertBefore(divider,toggle||null);form.insertBefore(gb,toggle||null);gb.addEventListener('click',googleLogin);
-  }
-  dialog.addEventListener('toggle',syncCopy);dialog.addEventListener('click',()=>setTimeout(syncCopy,0));document.addEventListener('click',e=>{if(e.target.closest('[data-auth-role],[data-register],[data-role],#toggleAuth,#authBack'))setTimeout(syncCopy,0)},true);
-  syncCopy();return true;
-}
-
-async function googleLogin(){
-  const btn=$('#googleLoginBtn'),err=$('#authError'),role=$('#authRole')?.value||'candidate',remember=$('#rememberLogin')?.checked!==false;
-  if(err)err.textContent='';if(btn){btn.disabled=true;btn.querySelector('.google-text').textContent='กำลังเชื่อมต่อ Google…'}
-  try{
-    await setPersistence(auth,remember?browserLocalPersistence:browserSessionPersistence);
-    const provider=new GoogleAuthProvider();provider.setCustomParameters({prompt:'select_account'});
-    const result=await signInWithPopup(auth,provider),u=result.user,ref=doc(db,'users',u.uid),snap=await getDoc(ref);
-    if(snap.exists()){
-      const p=snap.data();
-      if(p.status==='suspended'){await signOut(auth);throw new Error('บัญชีนี้ถูกระงับการใช้งาน กรุณาติดต่อผู้ดูแล')}
-      if(p.role&&p.role!==role){await signOut(auth);throw new Error(`อีเมล Google นี้เป็นบัญชี${roleLabel(p.role)} กรุณาเลือกเข้าสู่ระบบ${roleLabel(p.role)}`)}
-    }else{
-      await setDoc(ref,{displayName:u.displayName||u.email?.split('@')[0]||'ผู้ใช้งาน',email:u.email||'',role,status:'active',profileVisibility:role==='candidate'?'private':'public',companyVerified:false,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});
-    }
-    if(role==='employer'){
-      const cRef=doc(db,'companies',u.uid),cs=await getDoc(cRef);
-      if(!cs.exists())await setDoc(cRef,{name:u.displayName||'บริษัท',contactEmail:u.email||'',verified:false,status:'active',createdAt:serverTimestamp(),updatedAt:serverTimestamp()});
-    }
-    toast(`เข้าสู่ระบบ${roleLabel(role)}ด้วย Google สำเร็จ`);
-    const d=$('#authDialog');if(d?.open)d.close();
-    location.hash=role==='employer'?'employer':'jobs';setTimeout(()=>location.reload(),180);
-  }catch(e){
-    const code=e?.code||'';let msg=e?.message||'เข้าสู่ระบบด้วย Google ไม่สำเร็จ';
-    if(code.includes('popup-closed-by-user'))msg='ยกเลิกการเข้าสู่ระบบด้วย Google';
-    else if(code.includes('popup-blocked'))msg='เบราว์เซอร์บล็อกหน้าต่าง Google กรุณาอนุญาต Pop-up แล้วลองใหม่';
-    else if(code.includes('unauthorized-domain'))msg='โดเมนนี้ยังไม่ได้รับอนุญาตใน Firebase Authentication';
-    if(err)err.textContent=msg;toast(msg);
-  }finally{if(btn){btn.disabled=false;btn.querySelector('.google-text').textContent='เข้าสู่ระบบด้วย Google'}}
-}
-
+function toast(m){const e=$('#toast');if(!e)return;e.textContent=m;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),3200)}function roleLabel(role){return role==='employer'?'นายจ้าง':'ผู้หางาน'}function selectedRole(){return $('#accountType')?.value||'candidate'}function syncCopy(){const role=selectedRole(),mode=$('#authMode')?.value||'login',title=$('#authTitle'),google=$('#googleLoginBtn');if(title&&mode==='login')title.textContent=`เข้าสู่ระบบ${roleLabel(role)}`;if(google)google.querySelector('.google-text').textContent='เข้าสู่ระบบด้วย Google'}
+function install(){const dialog=$('#authDialog'),form=$('#authForm');if(!dialog||!form||dialog.dataset.modernAuth==='1')return false;dialog.dataset.modernAuth='1';dialog.classList.add('webhub-auth');const shell=document.createElement('div');shell.className='auth-shell';[...dialog.childNodes].forEach(n=>shell.appendChild(n));dialog.appendChild(shell);const brand=document.createElement('div');brand.className='auth-brand';brand.innerHTML='<img src="assets/brand/webhub-jobs-logo-transparent.png" alt="WebHub Jobs">';const close=shell.querySelector('.close');shell.insertBefore(brand,close?.nextSibling||shell.firstChild);let opts=$('#authOptions');if(!opts){opts=document.createElement('div');opts.id='authOptions';opts.className='auth-options';opts.innerHTML='<label class="auth-remember"><input type="checkbox" id="rememberLogin" checked><span>จดจำฉันไว้</span></label>';const forgot=$('#forgotPasswordBtn'),submit=$('#authSubmit');if(submit)form.insertBefore(opts,submit);if(forgot)opts.appendChild(forgot)}if(!$('#googleLoginBtn')){const divider=document.createElement('div');divider.className='auth-divider';divider.textContent='หรือ';const gb=document.createElement('button');gb.type='button';gb.id='googleLoginBtn';gb.className='google-login';gb.innerHTML='<span class="google-g">G</span><span class="google-text">เข้าสู่ระบบด้วย Google</span>';const toggle=$('#toggleAuth');form.insertBefore(divider,toggle||null);form.insertBefore(gb,toggle||null);gb.addEventListener('click',googleLogin)}document.addEventListener('click',e=>{if(e.target.closest('[data-auth-role],[data-register],[data-role],#toggleAuth,#authBack'))setTimeout(syncCopy,0)},true);syncCopy();return true}
+async function googleLogin(){const btn=$('#googleLoginBtn'),err=$('#authError'),role=selectedRole(),remember=$('#rememberLogin')?.checked!==false;if(err)err.textContent='';if(btn){btn.disabled=true;btn.querySelector('.google-text').textContent='กำลังเชื่อมต่อ Google…'}try{await setPersistence(auth,remember?browserLocalPersistence:browserSessionPersistence);const provider=new GoogleAuthProvider();provider.setCustomParameters({prompt:'select_account'});const result=await signInWithPopup(auth,provider),u=result.user,ref=doc(db,'users',u.uid),snap=await getDoc(ref);if(snap.exists()){const p=snap.data();if(p.status==='suspended'){await signOut(auth);throw new Error('บัญชีนี้ถูกระงับการใช้งาน กรุณาติดต่อผู้ดูแล')}if(p.role&&p.role!==role){await signOut(auth);throw new Error(`อีเมล Google นี้เป็นบัญชี${roleLabel(p.role)} กรุณาเลือกเข้าสู่ระบบ${roleLabel(p.role)}`)}}else{await setDoc(ref,{displayName:u.displayName||u.email?.split('@')[0]||'ผู้ใช้งาน',email:u.email||'',role,status:'active',profileVisibility:role==='candidate'?'private':'public',companyVerified:false,createdAt:serverTimestamp(),updatedAt:serverTimestamp()})}if(role==='employer'){const cRef=doc(db,'companies',u.uid),cs=await getDoc(cRef);if(!cs.exists())await setDoc(cRef,{name:u.displayName||'บริษัท',contactEmail:u.email||'',verified:false,status:'active',createdAt:serverTimestamp(),updatedAt:serverTimestamp()})}toast(`เข้าสู่ระบบ${roleLabel(role)}ด้วย Google สำเร็จ`);const d=$('#authDialog');if(d?.open)d.close();location.hash=role==='employer'?'employer':'jobs';setTimeout(()=>location.reload(),180)}catch(e){const code=e?.code||'';let msg=e?.message||'เข้าสู่ระบบด้วย Google ไม่สำเร็จ';if(code.includes('popup-closed-by-user'))msg='ยกเลิกการเข้าสู่ระบบด้วย Google';else if(code.includes('popup-blocked'))msg='เบราว์เซอร์บล็อกหน้าต่าง Google กรุณาอนุญาต Pop-up แล้วลองใหม่';else if(code.includes('unauthorized-domain'))msg='โดเมนนี้ยังไม่ได้รับอนุญาตใน Firebase Authentication';if(err)err.textContent=msg;toast(msg)}finally{if(btn){btn.disabled=false;btn.querySelector('.google-text').textContent='เข้าสู่ระบบด้วย Google'}}}
 if(!install()){let n=0;const t=setInterval(()=>{if(install()||++n>40)clearInterval(t)},200)}
