@@ -1,57 +1,41 @@
 export const firebaseConfig={apiKey:"AIzaSyDZSY0jxEGzTG0rualNAgH_Ly45Ve_b3SY",authDomain:"jobhub-a0de5.firebaseapp.com",projectId:"jobhub-a0de5",storageBucket:"jobhub-a0de5.firebasestorage.app",messagingSenderId:"390768908775",appId:"1:390768908775:web:1bd01cba98df640e228542",measurementId:"G-2W4VFTTKJB"};
 
 // Homepage compatibility: app.js still binds a legacy #showLogin hook.
-// Keep the hook hidden so a missing legacy button cannot stop job loading.
 const isHomepage=location.pathname==='/'||location.pathname.endsWith('/index.html');
 if(isHomepage&&!document.getElementById('showLogin')){
   const legacyLoginHook=document.createElement('button');
-  legacyLoginHook.id='showLogin';
-  legacyLoginHook.type='button';
-  legacyLoginHook.hidden=true;
-  legacyLoginHook.setAttribute('aria-hidden','true');
-  document.body.appendChild(legacyLoginHook);
+  legacyLoginHook.id='showLogin';legacyLoginHook.type='button';legacyLoginHook.hidden=true;legacyLoginHook.setAttribute('aria-hidden','true');document.body.appendChild(legacyLoginHook);
 }
-if(isHomepage){
-  setTimeout(()=>{import('./auth-modern-patch.js?v=20260908-2');},0);
+if(isHomepage)setTimeout(()=>{import('./auth-modern-patch.js?v=20260908-2');},0);
+
+// Dynamic article fallback always exposes the final pretty URL immediately.
+// The scheduled prerender later turns the same path into a native static 200 page.
+if(location.pathname.endsWith('/article.html')){
+  const slug=new URLSearchParams(location.search).get('slug');
+  if(slug&&/^[a-z0-9][a-z0-9-]*$/i.test(slug)){
+    const pretty=`/articles/${slug}/`;
+    history.replaceState({webhubArticleSlug:slug},'',pretty);
+    let canonical=document.querySelector('link[rel="canonical"]');
+    if(!canonical){canonical=document.createElement('link');canonical.rel='canonical';document.head.appendChild(canonical)}
+    canonical.href=`https://webhub.asia${pretty}`;
+  }
 }
+// Make every dynamically rendered article recommendation use the pretty format too.
+document.addEventListener('click',e=>{
+  const a=e.target.closest?.('a[href*="article.html?slug="]');if(!a)return;
+  try{const u=new URL(a.href,location.href),slug=u.searchParams.get('slug');if(slug&&/^[a-z0-9][a-z0-9-]*$/i.test(slug))a.href=`/articles/${slug}/`}catch{}
+},true);
 
 // Google Analytics 4 — public pages only. Admin traffic is intentionally excluded.
 const isAdminPage=/\/(admin(?:-[^/]*)?\.html)$/.test(location.pathname);
 if(!isAdminPage&&!window.__webhubGA4){
-  window.__webhubGA4=true;
-  const GA_ID='G-ZQ69FR849J';
-  window.dataLayer=window.dataLayer||[];
-  window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};
-  window.gtag('js',new Date());
-  window.gtag('config',GA_ID);
-  const ga=document.createElement('script');
-  ga.async=true;
-  ga.src=`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
-  document.head.appendChild(ga);
+  window.__webhubGA4=true;const GA_ID='G-ZQ69FR849J';window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};window.gtag('js',new Date());window.gtag('config',GA_ID);const ga=document.createElement('script');ga.async=true;ga.src=`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;document.head.appendChild(ga);
 }
 
 if(location.pathname.endsWith('/admin.html')){
-  const addArticlesLink=()=>{
-    const tabs=document.querySelector('.tabs');
-    if(tabs&&!document.getElementById('adminArticlesDirectLink')){
-      const a=document.createElement('a');
-      a.id='adminArticlesDirectLink';
-      a.href='admin-articles.html';
-      a.textContent='บทความ';
-      a.className='tab';
-      a.style.cssText='text-decoration:none;color:#075985;background:#e0f2fe;border-color:#7dd3fc;display:inline-flex;align-items:center';
-      tabs.appendChild(a);
-    }
-  };
-  addArticlesLink();
-  document.addEventListener('DOMContentLoaded',addArticlesLink,{once:true});
-  const articleLinkTimer=setInterval(addArticlesLink,300);
-  setTimeout(()=>clearInterval(articleLinkTimer),15000);
-  setTimeout(()=>{import('./admin-company-email-patch.js?v=20260905-1');},0);
+  const addArticlesLink=()=>{const tabs=document.querySelector('.tabs');if(tabs&&!document.getElementById('adminArticlesDirectLink')){const a=document.createElement('a');a.id='adminArticlesDirectLink';a.href='admin-articles.html';a.textContent='บทความ';a.className='tab';a.style.cssText='text-decoration:none;color:#075985;background:#e0f2fe;border-color:#7dd3fc;display:inline-flex;align-items:center';tabs.appendChild(a)}};
+  addArticlesLink();document.addEventListener('DOMContentLoaded',addArticlesLink,{once:true});const articleLinkTimer=setInterval(addArticlesLink,300);setTimeout(()=>clearInterval(articleLinkTimer),15000);setTimeout(()=>{import('./admin-company-email-patch.js?v=20260905-1');},0);
 }
 if(location.pathname.endsWith('/admin-articles.html')){
-  setTimeout(()=>{import('./admin-articles-draft-loader.js?v=20260907-1');},0);
-  setTimeout(()=>{import('./admin-static-link-patch.js?v=20260905-1');},0);
-  setTimeout(()=>{import('./admin-article-publish-flow.js?v=20260906-1');},0);
-  setTimeout(()=>{import('./admin-article-seo-metadata-patch.js?v=20260907-1');},0);
+  setTimeout(()=>{import('./admin-articles-draft-loader.js?v=20260907-1');},0);setTimeout(()=>{import('./admin-static-link-patch.js?v=20260905-1');},0);setTimeout(()=>{import('./admin-article-publish-flow.js?v=20260906-1');},0);setTimeout(()=>{import('./admin-article-seo-metadata-patch.js?v=20260907-1');},0);
 }
