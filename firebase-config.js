@@ -1,5 +1,16 @@
 export const firebaseConfig={apiKey:"AIzaSyDZSY0jxEGzTG0rualNAgH_Ly45Ve_b3SY",authDomain:"jobhub-a0de5.firebaseapp.com",projectId:"jobhub-a0de5",storageBucket:"jobhub-a0de5.firebasestorage.app",messagingSenderId:"390768908775",appId:"1:390768908775:web:1bd01cba98df640e228542",measurementId:"G-2W4VFTTKJB"};
 
+// Homepage compatibility: app.js still binds a legacy #showLogin hook.
+// Keep the hook hidden so a missing legacy button cannot stop job loading.
+if((location.pathname==='/'||location.pathname.endsWith('/index.html'))&&!document.getElementById('showLogin')){
+  const legacyLoginHook=document.createElement('button');
+  legacyLoginHook.id='showLogin';
+  legacyLoginHook.type='button';
+  legacyLoginHook.hidden=true;
+  legacyLoginHook.setAttribute('aria-hidden','true');
+  document.body.appendChild(legacyLoginHook);
+}
+
 // Google Analytics 4 — public pages only. Admin traffic is intentionally excluded.
 const isAdminPage=/\/(admin(?:-[^/]*)?\.html)$/.test(location.pathname);
 if(!isAdminPage&&!window.__webhubGA4){
