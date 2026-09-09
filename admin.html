@@ -29,8 +29,8 @@
 import{initializeApp}from'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
 import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut}from'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 import{getFirestore,collection,getDocs,doc,getDoc,updateDoc,serverTimestamp,query,orderBy}from'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
-import{firebaseConfig}from'./firebase-config.js';
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);const $=s=>document.querySelector(s);let currentTab='jobs',cache={jobs:[],companies:[],users:[],reports:[],applications:[]},rejectId=null;
+import{firebaseConfig,activateAppCheck}from'./firebase-config.js';
+const app=initializeApp(firebaseConfig);activateAppCheck(app);const auth=getAuth(app),db=getFirestore(app);const $=s=>document.querySelector(s);let currentTab='jobs',cache={jobs:[],companies:[],users:[],reports:[],applications:[]},rejectId=null;
 const safe=v=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 const fmt=t=>t?.toDate?new Intl.DateTimeFormat('th-TH',{dateStyle:'medium',timeStyle:'short'}).format(t.toDate()):'-';
 async function adminProfile(u){if(!u)return null;const s=await getDoc(doc(db,'users',u.uid));return s.exists()&&s.data().role==='admin'?s.data():null}
