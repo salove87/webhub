@@ -1,44 +1,50 @@
 [
   {
-    "id":"what-to-do-if-you-are-laid-off",
-    "file":"what-to-do-if-you-are-laid-off.json",
-    "title":"ถ้าถูกเลิกจ้างต้องทำอย่างไร? เช็กสิทธิและสิ่งที่ควรทำหลังออกจากงาน",
-    "updated":"2026-09-08"
+    "id": "employee-welfare-fund-thailand-2026",
+    "file": "employee-welfare-fund-thailand-2026.json",
+    "title": "กองทุนสงเคราะห์ลูกจ้าง คืออะไร? เริ่มหัก 1 ตุลาคม 2569 ใครต้องจ่ายบ้าง",
+    "updated": "2026-09-09"
   },
   {
-    "id":"why-people-change-jobs-frequently",
-    "file":"why-people-change-jobs-frequently.json",
-    "title":"ทำไมคนถึงออกงานบ่อย หรือเปลี่ยนงานบ่อย? เข้าใจเหตุผลก่อนมองว่าเป็น Job Hopper",
-    "updated":"2026-09-07"
+    "id": "what-to-do-if-you-are-laid-off",
+    "file": "what-to-do-if-you-are-laid-off.json",
+    "title": "ถ้าถูกเลิกจ้างต้องทำอย่างไร? เช็กสิทธิและสิ่งที่ควรทำหลังออกจากงาน",
+    "updated": "2026-09-08"
   },
   {
-    "id":"hr-not-contacting-after-job-application",
-    "file":"hr-not-contacting-after-job-application.json",
-    "title":"สมัครงานไปแล้ว HR ไม่ติดต่อกลับ ต้องรอกี่วัน และควรทำอย่างไรต่อ?",
-    "updated":"2026-09-06"
+    "id": "why-people-change-jobs-frequently",
+    "file": "why-people-change-jobs-frequently.json",
+    "title": "ทำไมคนถึงออกงานบ่อย หรือเปลี่ยนงานบ่อย? เข้าใจเหตุผลก่อนมองว่าเป็น Job Hopper",
+    "updated": "2026-09-07"
   },
   {
-    "id":"what-age-is-it-harder-to-change-jobs",
-    "file":"what-age-is-it-harder-to-change-jobs.json",
-    "title":"อายุเท่าไรเปลี่ยนงานยากขึ้น? 30 35 40+ ยังหางานใหม่ได้ไหม",
-    "updated":"2026-09-06"
+    "id": "hr-not-contacting-after-job-application",
+    "file": "hr-not-contacting-after-job-application.json",
+    "title": "สมัครงานไปแล้ว HR ไม่ติดต่อกลับ ต้องรอกี่วัน และควรทำอย่างไรต่อ?",
+    "updated": "2026-09-06"
   },
   {
-    "id":"job-interview-preparation-tips",
-    "file":"job-interview-preparation-tips.json",
-    "title":"7 วิธีเตรียมตัวสัมภาษณ์งานให้มั่นใจ เพิ่มโอกาสได้งานตั้งแต่ครั้งแรก",
-    "updated":"2026-09-05"
+    "id": "what-age-is-it-harder-to-change-jobs",
+    "file": "what-age-is-it-harder-to-change-jobs.json",
+    "title": "อายุเท่าไรเปลี่ยนงานยากขึ้น? 30 35 40+ ยังหางานใหม่ได้ไหม",
+    "updated": "2026-09-06"
   },
   {
-    "id":"how-to-succeed-in-job-interview",
-    "file":"how-to-succeed-in-job-interview.json",
-    "title":"เตรียมตัวสัมภาษณ์งานอย่างไรให้ประสบความสำเร็จ พร้อมเทคนิคที่ใช้ได้จริง",
-    "updated":"2026-09-05"
+    "id": "job-interview-preparation-tips",
+    "file": "job-interview-preparation-tips.json",
+    "title": "7 วิธีเตรียมตัวสัมภาษณ์งานให้มั่นใจ เพิ่มโอกาสได้งานตั้งแต่ครั้งแรก",
+    "updated": "2026-09-05"
   },
   {
-    "id":"resume-writing-tips-that-attract-employers",
-    "file":"resume-writing-tips-that-attract-employers.json",
-    "title":"เทคนิคการเขียน Resume ให้ดึงดูดใจ HR และเพิ่มโอกาสถูกเรียกสัมภาษณ์",
-    "updated":"2026-09-05"
+    "id": "how-to-succeed-in-job-interview",
+    "file": "how-to-succeed-in-job-interview.json",
+    "title": "เตรียมตัวสัมภาษณ์งานอย่างไรให้ประสบความสำเร็จ พร้อมเทคนิคที่ใช้ได้จริง",
+    "updated": "2026-09-05"
+  },
+  {
+    "id": "resume-writing-tips-that-attract-employers",
+    "file": "resume-writing-tips-that-attract-employers.json",
+    "title": "เทคนิคการเขียน Resume ให้ดึงดูดใจ HR และเพิ่มโอกาสถูกเรียกสัมภาษณ์",
+    "updated": "2026-09-05"
   }
 ]
