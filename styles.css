@@ -35,3 +35,21 @@
 
 /* Keep one unified navy footer and remove legacy duplicate footers. */
 body>footer:not(.site-footer){display:none!important}.site-footer{margin-bottom:0!important}.site-footer .footer-policies,.site-footer .footer-bottom{background:transparent}
+
+/* Isolate the mobile header menu from footer <nav> elements. */
+.site-footer nav{position:static;inset:auto;width:auto;margin-right:0;background:transparent}
+.site-footer .footer-column{display:flex}
+.site-footer .footer-policies{display:flex}
+@media(max-width:900px){
+  .topbar>nav{display:none;position:absolute;top:72px;left:0;right:0;padding:20px;background:#fff;border-bottom:1px solid var(--line);flex-direction:column}
+  .topbar>nav.open{display:flex}
+}
+@media(max-width:700px){
+  .site-footer .footer-logo{width:min(290px,100%);padding:9px 12px;background:rgba(255,255,255,.96);border-radius:13px}
+  .site-footer .footer-logo img{max-height:76px}
+  .site-footer .footer-column{position:static;inset:auto;width:100%;background:transparent}
+  .site-footer .footer-column h3{font-size:19px}
+  .site-footer .footer-policies{position:static;inset:auto;width:100%;display:grid;grid-template-columns:auto 1fr;align-items:start}
+  .site-footer .footer-policies .policy-icon{grid-row:1/6}
+  .site-footer .footer-policies a,.site-footer .footer-policies button{width:auto;font-size:14px;line-height:1.6}
+}
