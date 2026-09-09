@@ -11,7 +11,7 @@ if(isHomepage&&!document.getElementById('showLogin')){
   const legacyLoginHook=document.createElement('button');
   legacyLoginHook.id='showLogin';legacyLoginHook.type='button';legacyLoginHook.hidden=true;legacyLoginHook.setAttribute('aria-hidden','true');document.body.appendChild(legacyLoginHook);
 }
-if(isHomepage)setTimeout(()=>{import('./auth-modern-patch.js?v=20260909-4');import('./employer-role-race-fix.js?v=20260909-1');import('./employer-job-management.js?v=20260909-1');},0);
+if(isHomepage)setTimeout(()=>{import('./auth-modern-patch.js?v=20260909-4');import('./employer-role-race-fix.js?v=20260909-1');import('./employer-job-management.js?v=20260909-1');import('./job-attractiveness-fields.js?v=20260909-1');},0);
 
 // Dynamic article fallback always exposes the final pretty URL immediately.
 // The scheduled prerender later turns the same path into a native static 200 page.
