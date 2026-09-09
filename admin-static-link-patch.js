@@ -1,1 +1,15 @@
-(()=>{let slugs=new Set;async function load(){try{const r=await fetch('./articles-static.json?v='+Date.now(),{cache:'no-store'});if(r.ok)slugs=new Set(await r.json())}catch{}rewrite()}function rewrite(){document.querySelectorAll('#list a[href*="article.html?slug="]').forEach(a=>{try{const u=new URL(a.href,location.href),s=u.searchParams.get('slug');if(s&&slugs.has(s))a.href=`articles/${encodeURIComponent(s)}/`}catch{}})}load();new MutationObserver(()=>{rewrite();load()}).observe(document.documentElement,{childList:true,subtree:true})})();
+(()=>{
+  function rewrite(){
+    document.querySelectorAll('#list a[href*="article.html?slug="]').forEach(a=>{
+      try{
+        const u=new URL(a.href,location.href);
+        const s=u.searchParams.get('slug');
+        if(s&&/^[a-z0-9][a-z0-9-]*$/i.test(s)){
+          a.href=`/articles/${encodeURIComponent(s)}/`;
+        }
+      }catch{}
+    });
+  }
+  rewrite();
+  new MutationObserver(rewrite).observe(document.documentElement,{childList:true,subtree:true});
+})();
