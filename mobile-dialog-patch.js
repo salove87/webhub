@@ -1,6 +1,6 @@
 const css=document.createElement('style');css.textContent=`
 /* Device-safe layout: never allow the page or dialogs to slide sideways */
-html,body{width:100%;max-width:100%;overflow-x:hidden!important;overscroll-behavior-x:none}
+html,body{width:100%;max-width:100%;overflow-x:clip!important;overscroll-behavior-x:none}
 body{position:relative}
 main,header,footer,section,article,form,fieldset{min-width:0;max-width:100%}
 img,svg,video,canvas{max-width:100%;height:auto}
