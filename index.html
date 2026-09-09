@@ -49,7 +49,57 @@
     <section class="section guide" id="guide"><h2>หางานอย่างปลอดภัย</h2><div><article><b>อย่าโอนเงิน</b><p>บริษัทที่น่าเชื่อถือไม่เรียกเก็บเงินเพื่อสมัครงาน</p></article><article><b>ตรวจสอบข้อมูล</b><p>เช็กเว็บไซต์ ที่อยู่ และช่องทางติดต่อของบริษัท</p></article><article><b>คุ้มครองข้อมูล</b><p>อย่าส่งรหัสผ่าน OTP หรือข้อมูลบัญชีธนาคาร</p></article><article><b>แจ้งประกาศผิดปกติ</b><p>กดรายงานเพื่อให้ทีมงานตรวจสอบทันที</p></article></div></section>
   </main>
 
-  <footer><div><a class="brand" href="#home"><span>WH</span><b>WebHub <em>Jobs</em></b></a><p>พื้นที่เชื่อมโอกาสการทำงานที่โปร่งใสและเข้าถึงง่าย</p></div><div><b>ผู้หางาน</b><a href="#jobs">ค้นหางาน</a><a href="#guide">คำแนะนำความปลอดภัย</a></div><div><b>นายจ้าง</b><a href="#talent">ค้นหาผู้สมัคร</a><button data-post-job>ลงประกาศงาน</button></div><div><b>ช่วยเหลือ</b><a href="mailto:support@webhub.asia">support@webhub.asia</a><button id="privacyBtn">นโยบายความเป็นส่วนตัว</button></div></footer>
+  <footer class="site-footer">
+  <div class="footer-main">
+    <section class="footer-brand">
+      <a href="#home" class="footer-logo" aria-label="WebHub Jobs หน้าแรก"><img src="assets/brand/webhub-jobs-logo-transparent.png" alt="WebHub Jobs หางานที่ใช่ คนที่พร้อม"></a>
+      <p>พื้นที่เชื่อมโอกาสการทำงานที่โปร่งใสและเข้าถึงง่าย<br>เพื่อผู้หางานและนายจ้าง</p>
+      <div class="footer-social" aria-label="ช่องทางสังคมออนไลน์">
+        <span class="social facebook" title="Facebook" aria-label="Facebook">f</span>
+        <span class="social line" title="LINE" aria-label="LINE">LINE</span>
+        <span class="social youtube" title="YouTube" aria-label="YouTube">▶</span>
+        <span class="social x" title="X" aria-label="X">𝕏</span>
+      </div>
+    </section>
+    <nav class="footer-column" aria-label="เมนูผู้หางาน">
+      <h3><span aria-hidden="true">●</span> ผู้หางาน</h3>
+      <a href="#jobs">ค้นหางาน</a>
+      <button type="button" data-register="candidate">สร้างเรซูเม่</button>
+      <a href="#guide">คำแนะนำความปลอดภัย</a>
+      <a href="mailto:support@webhub.asia?subject=ขอความช่วยเหลือสำหรับผู้หางาน">ศูนย์ช่วยเหลือผู้หางาน</a>
+    </nav>
+    <nav class="footer-column" aria-label="เมนูนายจ้าง">
+      <h3><span aria-hidden="true">▣</span> นายจ้าง</h3>
+      <a href="#talent">ค้นหาผู้สมัคร</a>
+      <button type="button" data-post-job>ลงประกาศงาน</button>
+      <a href="#employer">จัดการประกาศงาน</a>
+      <a href="mailto:support@webhub.asia?subject=ขอความช่วยเหลือสำหรับนายจ้าง">ศูนย์ช่วยเหลือนายจ้าง</a>
+    </nav>
+    <nav class="footer-column" aria-label="เมนูช่วยเหลือ">
+      <h3><span aria-hidden="true">◉</span> ช่วยเหลือ</h3>
+      <a href="mailto:support@webhub.asia">ติดต่อเรา</a>
+      <a href="mailto:support@webhub.asia">support@webhub.asia</a>
+      <a href="#guide">คำถามที่พบบ่อย (FAQ)</a>
+      <a href="mailto:support@webhub.asia?subject=แจ้งปัญหาการใช้งาน WebHub Jobs">แจ้งปัญหาการใช้งาน</a>
+    </nav>
+  </div>
+  <div class="footer-policies" aria-label="นโยบายและข้อกำหนด">
+    <span class="policy-icon" aria-hidden="true">▤</span>
+    <button type="button" id="privacyBtn">นโยบายความเป็นส่วนตัว</button>
+    <span aria-hidden="true">|</span>
+    <button type="button" data-footer-info="terms">เงื่อนไขการใช้บริการ</button>
+    <span aria-hidden="true">|</span>
+    <button type="button" data-footer-info="cookies">นโยบายคุกกี้</button>
+    <span aria-hidden="true">|</span>
+    <button type="button" data-footer-info="liability">ข้อจำกัดความรับผิด</button>
+    <span aria-hidden="true">|</span>
+    <a href="#guide">ความปลอดภัยในการหางาน</a>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 WebHub Jobs. สงวนลิขสิทธิ์ทุกประการ</p>
+    <p class="footer-tagline">หางานที่ใช่&nbsp; คนที่พร้อม&nbsp; สร้างโอกาสที่ดีกว่าให้กับทุกคน</p>
+  </div>
+</footer>
 
   <dialog id="authDialog"><button class="close" data-close>×</button><div id="authChoice"><h2>ยินดีต้อนรับสู่ WebHub Jobs</h2><p>เลือกประเภทบัญชีเพื่อใช้งานฟังก์ชันที่ตรงกับคุณ</p><div class="role-grid"><button data-role="candidate"><b>ฉันกำลังหางาน</b><span>สร้างโปรไฟล์ สมัครงาน และติดตามผล</span></button><button data-role="employer"><b>ฉันกำลังหาคน</b><span>ลงประกาศและบริหารผู้สมัคร</span></button></div></div><form id="authForm" class="hidden"><input type="hidden" id="accountType"><input type="hidden" id="authMode" value="login"><button type="button" class="back-link" id="authBack">← เลือกประเภทบัญชีใหม่</button><h2 id="authTitle">เข้าสู่ระบบ</h2><p id="authRole"></p><label class="hidden" id="nameRow">ชื่อที่แสดง<input id="displayName" autocomplete="name"></label><label>อีเมล<input id="email" type="email" autocomplete="email" required></label><label>รหัสผ่าน<input id="password" type="password" minlength="6" autocomplete="current-password" required></label><label class="check hidden" id="consentRow"><input id="consent" type="checkbox"><span>ยอมรับเงื่อนไขการใช้งานและนโยบายความเป็นส่วนตัว</span></label><p class="error" id="authError"></p><button class="link-btn" type="button" id="forgotPasswordBtn">ลืมรหัสผ่าน?</button><button class="btn primary full" type="submit" id="authSubmit">เข้าสู่ระบบ</button><button class="link-btn" type="button" id="toggleAuth">ยังไม่มีบัญชี? สมัครสมาชิก</button></form></dialog>
 
