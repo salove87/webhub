@@ -7,24 +7,30 @@
   <title>กำลังเปิดหน้า | WebHub Jobs</title>
   <script>
     (function(){
-      const rawPath = decodeURIComponent(location.pathname || '/');
-      const cleanedPath = rawPath.replace(/[\u200B-\u200D\u2060\uFEFF]/g,'').replace(/\s+$/g,'');
-      const normalized = cleanedPath.replace(/\/+$/,'') || '/';
-      const articleMatch = normalized.match(/^\/articles\/([a-z0-9][a-z0-9-]*)$/i);
+      const rawPath=decodeURIComponent(location.pathname||'/');
+      const cleanedPath=rawPath.replace(/[\u200B-\u200D\u2060\uFEFF]/g,'').replace(/\s+$/g,'');
+      const normalized=cleanedPath.replace(/\/+$/,'')||'/';
+      const articleMatch=normalized.match(/^\/articles\/([a-z0-9][a-z0-9-]*)$/i);
       if(articleMatch){
         const slug=articleMatch[1];
-        location.replace('/article.html?slug='+encodeURIComponent(slug)+'&pretty=1');
+        // Keep the public URL in canonical /articles/<slug>/ form.
+        // Load the dynamic article renderer without exposing article.html?slug= in the address bar.
+        sessionStorage.setItem('webhubPrettyArticleSlug',slug);
+        history.replaceState({webhubArticleSlug:slug},'',`/articles/${slug}/`);
+        fetch('/article.html',{cache:'no-store'})
+          .then(r=>r.text())
+          .then(html=>{
+            html=html.replace("const app=initializeApp(firebaseConfig),db=getFirestore(app),root=document.querySelector('#app'),slug=new URLSearchParams(location.search).get('slug');","const app=initializeApp(firebaseConfig),db=getFirestore(app),root=document.querySelector('#app'),slug=sessionStorage.getItem('webhubPrettyArticleSlug')||location.pathname.match(/^\\/articles\\/([^/]+)\\/?$/)?.[1]||new URLSearchParams(location.search).get('slug');sessionStorage.removeItem('webhubPrettyArticleSlug');");
+            document.open();document.write(html);document.close();
+          })
+          .catch(()=>{});
         return;
       }
-      const legacyHome = new Set(['/index.html','/index.htm','/webhub-job-portal','/webhub-job-portal.html']);
-      if (legacyHome.has(normalized) || normalized === '/') {
-        location.replace('/' + location.search + location.hash);
-        return;
+      const legacyHome=new Set(['/index.html','/index.htm','/webhub-job-portal','/webhub-job-portal.html']);
+      if(legacyHome.has(normalized)||normalized==='/'){
+        location.replace('/'+location.search+location.hash);return;
       }
-      if (cleanedPath !== rawPath) {
-        location.replace(cleanedPath + location.search + location.hash);
-        return;
-      }
+      if(cleanedPath!==rawPath){location.replace(cleanedPath+location.search+location.hash);return;}
     })();
   </script>
   <style>body{font-family:system-ui,-apple-system,"Noto Sans Thai",sans-serif;margin:0;min-height:100vh;display:grid;place-items:center;background:#f8fafc;color:#0f172a}.box{max-width:520px;padding:32px;text-align:center}.box a{display:inline-block;margin-top:16px;padding:11px 18px;border-radius:10px;background:#0f6fb5;color:#fff;text-decoration:none;font-weight:700}</style>
