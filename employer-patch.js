@@ -1,6 +1,7 @@
 import{getApp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import{getAuth,sendPasswordResetEmail}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import{getFirestore,doc,getDoc,setDoc,collection,addDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import("./post-job-ui-patch.js?v=20260909-1");
 
 const app=getApp(),auth=getAuth(app),db=getFirestore(app);
 const $=s=>document.querySelector(s);
