@@ -15,7 +15,7 @@ dialog{
   overflow-y:auto!important;
   overflow-x:hidden!important;
   overscroll-behavior:contain!important;
-  contain:layout paint;
+  contain:none;
 }
 dialog *,dialog *::before,dialog *::after{box-sizing:border-box;min-width:0;max-width:100%}
 dialog img,dialog svg,dialog video,dialog canvas{max-width:100%!important;height:auto!important}
@@ -96,7 +96,7 @@ function syncDialogState(){
   [...open.querySelectorAll('*')].forEach(el=>{if(el.scrollWidth>el.clientWidth+2&&getComputedStyle(el).overflowX==='visible')el.style.maxWidth='100%'});
 }
 function normalizeOpenDialogs(){
-  document.querySelectorAll('dialog[open]').forEach(d=>{d.scrollLeft=0;const first=d.querySelector('input:not([type="hidden"]),select,textarea');if(first&&window.innerWidth<=600)setTimeout(()=>first.blur?.(),0)});
+  document.querySelectorAll('dialog[open]').forEach(d=>{d.scrollLeft=0});
   syncDialogState();
 }
 const observer=new MutationObserver(()=>requestAnimationFrame(normalizeOpenDialogs));
