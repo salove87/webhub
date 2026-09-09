@@ -1,4 +1,9 @@
+import{initializeAppCheck,ReCaptchaV3Provider}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-app-check.js";
 export const firebaseConfig={apiKey:"AIzaSyDZSY0jxEGzTG0rualNAgH_Ly45Ve_b3SY",authDomain:"jobhub-a0de5.firebaseapp.com",projectId:"jobhub-a0de5",storageBucket:"jobhub-a0de5.firebasestorage.app",messagingSenderId:"390768908775",appId:"1:390768908775:web:1bd01cba98df640e228542",measurementId:"G-2W4VFTTKJB"};
+
+// Paste the reCAPTCHA v3 site key from Firebase Console here, then enable App Check enforcement after monitoring.
+export const appCheckSiteKey="";
+export function activateAppCheck(app){if(!appCheckSiteKey){console.info("Firebase App Check is ready but not active: add appCheckSiteKey first.");return null}return initializeAppCheck(app,{provider:new ReCaptchaV3Provider(appCheckSiteKey),isTokenAutoRefreshEnabled:true})}
 
 // Homepage compatibility: app.js still binds a legacy #showLogin hook.
 const isHomepage=location.pathname==='/'||location.pathname.endsWith('/index.html');
