@@ -49,3 +49,11 @@ firebase deploy --only firestore:rules,storage
 ## ก่อนประชาสัมพันธ์วงกว้าง
 
 ควรเปิด Firebase App Check, Email verification, CAPTCHA/anti-abuse และจัดทำนโยบายความเป็นส่วนตัว/ข้อกำหนดการใช้งานฉบับเต็ม
+
+
+## Authentication hardening
+
+- Email/password registrations receive a Firebase verification email. Unverified users may sign in, but cannot apply for jobs or create job posts.
+- The sign-in form includes Firebase password reset.
+- Company verification uses `companies/{uid}.verified` as the single source of truth; job documents only keep a display snapshot.
+- Firebase App Check support is included in `firebase-config.js`. Add the reCAPTCHA v3 site key, monitor valid traffic, and only then enable enforcement in Firebase Console.
