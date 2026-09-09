@@ -4,6 +4,7 @@ service cloud.firestore {
     function signedIn(){ return request.auth != null; }
     function me(){ return get(/databases/$(database)/documents/users/$(request.auth.uid)); }
     function active(){ return signedIn() && me().data.get('status', 'active') == 'active'; }
+    function verifiedUser(){ return active() && request.auth.token.email_verified == true; }
     function role(r){ return active() && me().data.role == r; }
     function admin(){ return role('admin'); }
     function myCompany(){ return get(/databases/$(database)/documents/companies/$(request.auth.uid)); }
@@ -26,7 +27,7 @@ service cloud.firestore {
     match /jobs/{id} {
       allow read: if resource.data.status == 'published'
                   || (active() && (resource.data.employerId == request.auth.uid || admin()));
-      allow create: if admin() || (role('employer')
+      allow create: if admin() || (verifiedUser() && role('employer')
                     && request.resource.data.employerId == request.auth.uid
                     && request.resource.data.status in ['pending','draft']
                     && request.resource.data.companyVerified == myCompanyVerified());
@@ -47,7 +48,7 @@ service cloud.firestore {
     }
 
     match /applications/{id} {
-      allow create: if role('candidate')
+      allow create: if verifiedUser() && role('candidate')
                     && request.resource.data.candidateId == request.auth.uid
                     && id == request.resource.data.jobId + '_' + request.auth.uid
                     && get(/databases/$(database)/documents/jobs/$(request.resource.data.jobId)).data.status == 'published';
