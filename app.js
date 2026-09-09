@@ -1,7 +1,7 @@
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import{getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,sendEmailVerification,sendPasswordResetEmail,reload,updateProfile,signOut}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import{getFirestore,collection,addDoc,setDoc,doc,getDoc,getDocs,query,where,orderBy,limit,startAfter,serverTimestamp,increment,updateDoc,onSnapshot}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import{firebaseConfig,activateAppCheck}from"./firebase-config.js";
+import{firebaseConfig,activateAppCheck}from"./firebase-config.js?v=20260909-4";
 
 const app=initializeApp(firebaseConfig);activateAppCheck(app);const auth=getAuth(app),db=getFirestore(app);
 let user=null,userProfile=null,companyProfile=null,jobs=[],lastDoc=null,stopEmployerJobs=null,pageSize=12,logoDataUrl="";
